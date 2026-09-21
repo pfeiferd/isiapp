@@ -174,6 +174,10 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
   // "offsetSeconds": Zeit-Ausgleich, falls eine Route deutlich länger ist
   //                  (positiv = Gutschrift für dieses Team).
   // "code": 4-stelliger Team-Code, den der Spielleiter dem Team gibt.
+  // Gruppenzuordnung der Kinder erfolgt per Würfeln zu Spielbeginn.
+  // T5 "Die Falken" ist das Reserve-Team, nur bei Bedarf (z. B. genug Kinder
+  // für ein 5. Team) im Einsatz – deshalb schon vorab per offsetSeconds
+  // ausgeglichen, statt die Route nachträglich neu zu planen.
   teams: [
     {
       id: "T1", name: "Die Füchse", emoji: "🦊", color: "#e2711d", code: "1111",
@@ -197,8 +201,10 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     },
     {
       id: "T5", name: "Die Falken", emoji: "🦅", color: "#2a6f4e", code: "5555",
-      route: ["W4", "W2", "W6", "W5", "W3", "W7", "W1", "W8"],   // ≈ 3,59 km Luftlinie
-      offsetSeconds: 0,
+      route: ["W4", "W2", "W6", "W5", "W3", "W7", "W1", "W8"],   // ≈ 3,59 km Luftlinie, 5,09 km realer Fußweg (Valhalla)
+      // Falken-Route ist ~480m länger als der Schnitt der anderen 4 Teams (4,61 km) –
+      // Zeitvorsprung als Ausgleich (bei ~4 km/h Kindertempo ≈ 7 Min), wird am Ende abgezogen.
+      offsetSeconds: 420,
     },
   ],
 };
