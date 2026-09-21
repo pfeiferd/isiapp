@@ -21,6 +21,10 @@ html, body {
   height: 100%;
 }
 
+html {
+  font-size: 18px;
+}
+
 body {
   font-family: "Chalkboard SE", "Comic Sans MS", "Segoe Print", "Comic Neue", cursive, sans-serif;
   background:
@@ -87,14 +91,14 @@ p  { line-height: 1.45; }
   letter-spacing: 0.5px;
 }
 
-.story-text { white-space: pre-line; font-size: 0.98rem; }
+.story-text { white-space: pre-line; font-size: 1.05rem; }
 
 .rules { list-style: none; }
 .rules li {
   padding: 5px 0 5px 28px;
   position: relative;
-  font-size: 0.95rem;
-  line-height: 1.35;
+  font-size: 1.05rem;
+  line-height: 1.4;
 }
 .rules li::before { content: "🧭"; position: absolute; left: 0; }
 
@@ -154,7 +158,7 @@ button.team-btn .team-emoji { font-size: 1.8rem; }
   margin-bottom: 8px;
 }
 .hud .hud-team { font-size: 1.5rem; }
-.hud .hud-progress { font-weight: bold; font-size: 0.95rem; color: var(--ink-soft); }
+.hud .hud-progress { font-weight: bold; font-size: 1.05rem; color: var(--ink-soft); }
 .hud .hud-timer {
   font-variant-numeric: tabular-nums;
   font-weight: bold;
@@ -209,12 +213,12 @@ button.team-btn .team-emoji { font-size: 1.8rem; }
 }
 .distance small { font-size: 1.1rem; }
 .geo-status {
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   color: var(--ink-soft);
   text-align: center;
   min-height: 1.2em;
 }
-.direction-text { font-size: 1rem; color: var(--ink-soft); }
+.direction-text { font-size: 1.05rem; color: var(--ink-soft); }
 
 /* ---------- Rätsel ---------- */
 .answer-row {
@@ -235,7 +239,7 @@ input[type="text"], input[type="number"], input[type="tel"] {
   -webkit-user-select: text;
   user-select: text;
 }
-.attempts { text-align: center; color: var(--ink-soft); font-size: 0.9rem; margin-top: 6px; }
+.attempts { text-align: center; color: var(--ink-soft); font-size: 1rem; margin-top: 6px; }
 
 /* ---------- Strafe ---------- */
 .penalty-count {
@@ -266,7 +270,7 @@ input[type="text"], input[type="number"], input[type="tel"] {
 /* ---------- Diverses ---------- */
 .spacer { flex: 1; }
 .center { text-align: center; }
-.small { font-size: 0.85rem; color: var(--ink-soft); }
+.small { font-size: 0.95rem; color: var(--ink-soft); }
 .hidden { display: none !important; }
 
 .badge {
@@ -301,7 +305,7 @@ input[type="text"], input[type="number"], input[type="tel"] {
 /* dezenter Fußbereich */
 footer {
   text-align: center;
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   color: rgba(74,47,27,0.5);
   padding: 8px 0 2px;
 }

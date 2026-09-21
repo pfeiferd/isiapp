@@ -81,13 +81,13 @@ GPS im Browser funktioniert **nur über HTTPS** – GitHub Pages liefert das:
 
 ```bash
 git init && git add . && git commit -m "Schatzsuche"
-gh repo create schatzsuche --public --source=. --push
-gh api repos/{owner}/schatzsuche/pages -f "source[branch]=main" -f "source[path]=/"
+gh repo create isiapp --public --source=. --push
+gh api repos/{owner}/isiapp/pages -f "source[branch]=main" -f "source[path]=/"
 ```
 
-Danach ist die App unter `https://<benutzer>.github.io/schatzsuche/` erreichbar.
+Danach ist die App unter `https://<benutzer>.github.io/isiapp/` erreichbar.
 Diesen Link (z. B. als QR-Code) auf die Kinder-Handys bringen.
-`setup.html` erreichst du unter `…/schatzsuche/setup.html`.
+`setup.html` erreichst du unter `…/isiapp/setup.html`.
 
 > Tipp: Repo erst kurz vor dem Fest veröffentlichen oder die Antworten
 > ändern – die Lösungen stehen ja in `config.js` 😉. Für 10–12-Jährige im
