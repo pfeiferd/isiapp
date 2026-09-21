@@ -58,9 +58,10 @@ entsprechend anpassen.
 
 ### 3. Caches verstecken
 
-Kleine wasserdichte Dosen/Beutel mit „Goldmünzen" (Schoko-Taler, Deko-Münzen,
-bemalte Steine) an den Stationen mit `cache`-Text verstecken. Genug Münzen für
-alle Teams einlegen! Standardmäßig haben 4 von 8 Stationen ein Versteck.
+Kleine wasserdichte Dosen/Beutel mit „Goldmünzen" an allen 8 Stationen (siehe
+`cache`-Text) verstecken. Genug Münzen für alle Teams einlegen! Jedes Team
+hat sein eigenes Münzdesign (siehe `muenzen.html` zum Ausdrucken) – so lässt
+sich nicht schummeln, wer welche Münze schon eingesammelt hat.
 
 ### 4. Routenlängen prüfen
 

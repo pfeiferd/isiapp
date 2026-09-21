@@ -48,7 +48,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
       "Die Nadel zeigt Norden, das 🎯-Zielsymbol und die Meterzahl führen euch zur nächsten Station.",
       "Erst wenn ihr nah genug seid, könnt ihr »Wir sind da!« drücken.",
       "Antworten sind immer ZAHLEN. Falsche Antwort = Zeitstrafe (warten!).",
-      "In manchen Verstecken liegen Goldmünzen: Nehmt genau EINE pro Team und lasst den Rest liegen!",
+      "An jeder Station liegen Goldmünzen versteckt: Nehmt genau EINE pro Team und lasst den Rest liegen!",
       "Jede Münze bringt am Ende Zeitgutschrift. Das schnellste Team (nach Gutschrift) gewinnt.",
       "Achtet auf Wege, Radfahrer und andere Parkbesucher!",
     ],
@@ -73,7 +73,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
       name: "Das alte Ziegelei-Tor",
       hint: "Folgt dem 🎯-Zielsymbol! Ihr seid richtig, wo man Jakobs Reich betritt und eine Tafel die Besucher grüßt.",
       lat: 49.13145, lon: 9.18385, radius: 25,   // Parkeingang SO – vor Ort prüfen!
-      cache: "",
+      cache: "Direkt unter der Begrüßungstafel liegt eine kleine Dose. EINE Münze nehmen, Dose genau so zurücklegen!",
       riddle: {
         text: "Jakobs Ringofen hatte 14 Kammern. In jeder Kammer wurden genau 250 Ziegel gebrannt. Wie viele Ziegel waren das bei einem Brand insgesamt?",
         answer: "3500",
@@ -97,7 +97,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
       name: "Der Hexentreff",
       hint: "Hier oben, so raunt man, trafen sich nachts die Hexen und blickten weit über Jakobs Reich. Ihr seid richtig, wenn auch ihr weit ins Land schauen könnt.",
       lat: 49.13188, lon: 9.17630, radius: 30,   // Aussichtspunkt West (OSM)
-      cache: "",
+      cache: "Unter der Bank mit dem besten Ausblick liegt der Hexen-Schatz: eine kleine Dose. EINE Münze nehmen, Dose genau so zurücklegen!",
       riddle: {
         text: "In der Vollmondnacht treffen sich hier 3 Hexen zum Tanz – und jede bringt 2 Schwestern mit. Dann kommt noch der Kater der ältesten Hexe dazu und tanzt mit! Wie viele tanzen im Hexenkreis?",
         answer: "10",
@@ -121,7 +121,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
       name: "Die alte Lehmgrube",
       hint: "Unter dieser Wiese schlummert die Grube, aus der Jakob einst seinen Lehm holte. Nur das 🎯-Zielsymbol kennt die Stelle!",
       lat: 49.13180, lon: 9.17750, radius: 30,   // SW-Wiese – vor Ort markanten Punkt wählen!
-      cache: "",
+      cache: "Am Rand der Wiese, unter einem platten Stein, liegt eine kleine Dose mit Jakobs Lehm-Schatz. EINE Münze nehmen, Stein genau so zurücklegen!",
       riddle: {
         text: "Jakob schaffte jeden Tag doppelt so viele Karren Lehm aus der Grube wie am Tag davor: Am 1. Tag 2 Karren, am 2. Tag 4, dann 8, dann 16 … Wie viele Karren waren es am 5. Tag?",
         answer: "32",
@@ -145,7 +145,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
       name: "Die Säule des Himmels",
       hint: "Folgt dem 🎯-Zielsymbol zu Jakobs steinernem Wächter, der den Himmel trägt. Erst ganz nah verrät er euch sein Geheimnis.",
       lat: 49.133292, lon: 9.185217, radius: 30,   // Wasserturm Böckingen (OSM)
-      cache: "",
+      cache: "Am Fuß des Turms, zwischen den Wurzeln des nächsten Baumes, liegt eine kleine Dose. EINE Münze nehmen, alles wieder gut tarnen!",
       riddle: {
         // Baujahr laut Wikipedia: 1929 – bitte vor Ort prüfen, dass die
         // Jahreszahl am Turm sichtbar ist (sonst Rätsel/Antwort anpassen)!
