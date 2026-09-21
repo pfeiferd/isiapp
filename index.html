@@ -71,8 +71,13 @@
     </div>
     <div class="compass-wrap">
       <div class="compass">
-        <span class="north" id="compass-north">N</span>
-        <span class="arrow" id="compass-arrow">⬆️</span>
+        <span class="north-marker" id="compass-north">N</span>
+        <span class="target-marker" id="compass-target">🎯</span>
+        <svg class="arrow" id="compass-arrow" viewBox="0 0 40 100" xmlns="http://www.w3.org/2000/svg">
+          <polygon class="needle-north" points="20,2 30,50 20,42 10,50" stroke-width="1.5" stroke-linejoin="round"/>
+          <polygon class="needle-south" points="20,98 30,50 20,58 10,50" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle class="needle-pivot" cx="20" cy="50" r="6" stroke-width="1.5"/>
+        </svg>
       </div>
       <div class="distance"><span id="nav-distance">– m</span></div>
       <div class="direction-text" id="nav-direction"></div>

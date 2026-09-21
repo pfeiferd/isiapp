@@ -246,12 +246,14 @@
     $("nav-geo-status").textContent = `GPS-Genauigkeit: ±${Math.round(accuracy)} m` +
       (accuracy > 35 ? " – freien Himmel suchen!" : "");
 
-    // Pfeil drehen: relativ zur Blickrichtung, falls Kompass/Bewegungsrichtung bekannt
+    // Nadel zeigt immer nach Norden; N- und Zielmarkierung wandern relativ zur Blickrichtung am Rand entlang
     let hdg = compassHeading;
     if (hdg == null && heading != null && !isNaN(heading)) hdg = heading;
-    const rot = hdg == null ? brg : brg - hdg;
-    $("compass-arrow").style.transform = `rotate(${rot}deg)`;
-    $("compass-north").style.transform = `rotate(${hdg == null ? 0 : -hdg}deg)`;
+    const northRot = hdg == null ? 0 : -hdg;
+    const targetRot = hdg == null ? brg : brg - hdg;
+    $("compass-arrow").style.transform = `rotate(${northRot}deg)`;
+    $("compass-north").style.transform = `rotate(${northRot}deg)`;
+    $("compass-target").style.transform = `rotate(${targetRot}deg)`;
 
     const radius = tgt.radius || CFG.settings.arrivalRadius;
     const arrived = dist <= Math.max(radius, Math.min(accuracy, 40));

@@ -198,12 +198,17 @@ button.team-btn .team-emoji { font-size: 1.8rem; }
   justify-content: center;
 }
 .compass .arrow {
-  font-size: min(30vw, 120px);
-  line-height: 1;
+  width: calc(min(58vw, 230px) * 0.248);
+  height: calc(min(58vw, 230px) * 0.62);
+  display: block;
+  filter: drop-shadow(0 2px 1px rgba(74,47,27,0.35));
   transition: transform 0.4s ease;
   will-change: transform;
 }
-.compass .north {
+.compass .arrow .needle-north { fill: var(--red); stroke: var(--ink); }
+.compass .arrow .needle-south { fill: var(--parchment); stroke: var(--ink); }
+.compass .arrow .needle-pivot { fill: var(--gold); stroke: var(--ink); }
+.compass .north-marker {
   position: absolute;
   top: 6px; left: 50%;
   transform-origin: 50% calc(min(29vw, 115px) - 6px);
@@ -211,6 +216,16 @@ button.team-btn .team-emoji { font-size: 1.8rem; }
   font-weight: bold;
   color: var(--red);
   font-size: 1rem;
+  transition: transform 0.4s ease;
+}
+.compass .target-marker {
+  position: absolute;
+  top: 6px; left: 50%;
+  transform-origin: 50% calc(min(29vw, 115px) - 6px);
+  translate: -50% 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 1px rgba(74,47,27,0.35));
   transition: transform 0.4s ease;
 }
 .distance {

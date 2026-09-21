@@ -45,7 +45,7 @@ ist. An jeder Station wartet ein Rätsel – und manchmal ein echtes Versteck mi
 Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     rules: [
       "Bleibt immer als Team zusammen – das Handy trägt abwechselnd jemand anderes.",
-      "Der Pfeil und die Meterzahl führen euch zur nächsten Station.",
+      "Die Nadel zeigt Norden, das 🎯-Zielsymbol und die Meterzahl führen euch zur nächsten Station.",
       "Erst wenn ihr nah genug seid, könnt ihr »Wir sind da!« drücken.",
       "Antworten sind immer ZAHLEN. Falsche Antwort = Zeitstrafe (warten!).",
       "In manchen Verstecken liegen Goldmünzen: Nehmt genau EINE pro Team und lasst den Rest liegen!",
@@ -71,7 +71,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     {
       id: "W1",
       name: "Das alte Ziegelei-Tor",
-      hint: "Folgt dem Pfeil! Ihr seid richtig, wo man Jakobs Reich betritt und eine Tafel die Besucher grüßt.",
+      hint: "Folgt dem 🎯-Zielsymbol! Ihr seid richtig, wo man Jakobs Reich betritt und eine Tafel die Besucher grüßt.",
       lat: 49.13145, lon: 9.18385, radius: 25,   // Parkeingang SO – vor Ort prüfen!
       cache: "",
       riddle: {
@@ -83,7 +83,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     {
       id: "W2",
       name: "Der Wolkenspiegel",
-      hint: "Folgt dem Pfeil zu dem Ort, an dem sich der Himmel spiegelt und gefiederte Wächter schwimmen.",
+      hint: "Folgt dem 🎯-Zielsymbol zu dem Ort, an dem sich der Himmel spiegelt und gefiederte Wächter schwimmen.",
       lat: 49.13357, lon: 9.18037, radius: 25,   // Ziegeleisee (OSM) – Bank am Ufer wählen!
       cache: "Sucht unter der Bank mit Blick aufs Wasser: Dort klebt/liegt eine kleine Dose. Nehmt EINE Goldmünze für euer Team und legt die Dose genau so zurück!",
       riddle: {
@@ -107,7 +107,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     {
       id: "W4",
       name: "Der Tummelplatz",
-      hint: "Wo früher Jakobs Arbeiter rasteten, wird heute getobt und geklettert. Der Pfeil zeigt euch den Weg!",
+      hint: "Wo früher Jakobs Arbeiter rasteten, wird heute getobt und geklettert. Das 🎯-Zielsymbol zeigt euch den Weg!",
       lat: 49.13466, lon: 9.18054, radius: 25,   // Spielplatz Bruhweg (OSM)
       cache: "Am Rand des Spielplatzes, beim dicksten Baum, liegt unter einem auffälligen Stein eine Dose. EINE Münze nehmen, Stein wieder drauflegen!",
       riddle: {
@@ -119,7 +119,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     {
       id: "W5",
       name: "Die alte Lehmgrube",
-      hint: "Unter dieser Wiese schlummert die Grube, aus der Jakob einst seinen Lehm holte. Nur der Pfeil kennt die Stelle!",
+      hint: "Unter dieser Wiese schlummert die Grube, aus der Jakob einst seinen Lehm holte. Nur das 🎯-Zielsymbol kennt die Stelle!",
       lat: 49.13180, lon: 9.17750, radius: 30,   // SW-Wiese – vor Ort markanten Punkt wählen!
       cache: "",
       riddle: {
@@ -143,7 +143,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     {
       id: "W7",
       name: "Die Säule des Himmels",
-      hint: "Folgt dem Pfeil zu Jakobs steinernem Wächter, der den Himmel trägt. Erst ganz nah verrät er euch sein Geheimnis.",
+      hint: "Folgt dem 🎯-Zielsymbol zu Jakobs steinernem Wächter, der den Himmel trägt. Erst ganz nah verrät er euch sein Geheimnis.",
       lat: 49.133292, lon: 9.185217, radius: 30,   // Wasserturm Böckingen (OSM)
       cache: "",
       riddle: {
