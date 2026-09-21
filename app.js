@@ -87,8 +87,8 @@
   }
 
   function cardinal(deg) {
-    const dirs = ["Norden ⬆️", "Nordosten ↗️", "Osten ➡️", "Südosten ↘️",
-                  "Süden ⬇️", "Südwesten ↙️", "Westen ⬅️", "Nordwesten ↖️"];
+    const dirs = ["Norden", "Nordosten", "Osten", "Südosten",
+                  "Süden", "Südwesten", "Westen", "Nordwesten"];
     return dirs[Math.round(deg / 45) % 8];
   }
 
@@ -242,7 +242,8 @@
     $("nav-distance").textContent = dist >= 1000
       ? (dist / 1000).toFixed(2).replace(".", ",") + " km"
       : Math.round(dist) + " m";
-    $("nav-direction").textContent = "Richtung: " + cardinal(brg);
+    $("nav-direction-label").textContent = cardinal(brg);
+    $("nav-direction-arrow").style.transform = `rotate(${Math.round(brg / 45) * 45}deg)`;
     $("nav-geo-status").textContent = `GPS-Genauigkeit: ±${Math.round(accuracy)} m` +
       (accuracy > 35 ? " – freien Himmel suchen!" : "");
 
