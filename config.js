@@ -173,7 +173,9 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
   // damit die Teams nicht nebeneinander herlaufen.
   // "offsetSeconds": Zeit-Ausgleich, falls eine Route deutlich länger ist
   //                  (positiv = Gutschrift für dieses Team).
-  // "code": 4-stelliger Team-Code, den der Spielleiter dem Team gibt.
+  // "code": 4-stelliger Team-Code – nur noch Rückfalloption. Normalerweise
+  //         scannt das Team seinen QR-Code (qrcodes.html), der die App mit
+  //         ?team=T1 öffnet; dann entfallen Teamwahl und Code-Eingabe.
   // Gruppenzuordnung der Kinder erfolgt per Würfeln zu Spielbeginn.
   // T5 "Die Falken" ist das Reserve-Team, nur bei Bedarf (z. B. genug Kinder
   // für ein 5. Team) im Einsatz – deshalb schon vorab per offsetSeconds

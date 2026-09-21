@@ -123,6 +123,15 @@
     if (t) document.documentElement.style.setProperty("--team-color", t.color);
   }
 
+  // Team aus der URL (?team=T1) – so startet der QR-Code eines Teams direkt,
+  // ohne Teamwahl und ohne Code-Eingabe.
+  function teamFromUrl() {
+    const raw = new URLSearchParams(location.search).get("team");
+    if (!raw) return null;
+    const key = raw.trim().toUpperCase();
+    return CFG.teams.find((t) => t.id.toUpperCase() === key) || null;
+  }
+
   // ---------- Titel / Teamwahl ----------
   function renderTitle() {
     $("title-heading").textContent = CFG.story.title;
@@ -150,12 +159,26 @@
 
   let pendingTeam = null;
 
+  function startWithTeam(t) {
+    state = {
+      teamId: t.id,
+      phase: "story",
+      startedAt: null,
+      finishedAt: null,
+      legIndex: 0,
+      attempts: 0,
+      penaltyUntil: null,
+      solvedCount: 0,
+      wrongCount: 0,
+      testMode: state.testMode,
+    };
+    save();
+  }
+
   function checkTeamCode() {
     const val = $("code-input").value.trim();
     if (pendingTeam && val === pendingTeam.code) {
-      state.teamId = pendingTeam.id;
-      state.phase = "story";
-      save();
+      startWithTeam(pendingTeam);
       applyTeamColor();
       renderStory();
     } else {
@@ -489,7 +512,8 @@
   function gmReset() {
     if (confirm("Wirklich ALLES zurücksetzen? Der Spielstand dieses Teams geht verloren!")) {
       localStorage.removeItem(STORAGE_KEY);
-      location.reload();
+      // ohne Query-Parameter neu laden, sonst startet ?team=… sofort wieder
+      location.replace(location.pathname);
     }
   }
 
@@ -527,6 +551,18 @@
   function resume() {
     // ?test=1 in der URL schaltet den Testmodus ein (für Proben am Schreibtisch)
     if (new URLSearchParams(location.search).get("test") === "1") state.testMode = true;
+
+    // ?team=T1 (aus dem QR-Code des Teams): Team steht fest, Code-Eingabe entfällt.
+    const linked = teamFromUrl();
+    if (linked && linked.id !== state.teamId) {
+      const running = state.phase === "title" ? null : team();
+      if (!running || confirm(
+        `Auf diesem Handy läuft schon das Spiel von ${running.emoji} ${running.name}.\n\n` +
+        `Wirklich zu ${linked.emoji} ${linked.name} wechseln? Der bisherige Spielstand geht dabei verloren!`
+      )) {
+        startWithTeam(linked);
+      }
+    }
 
     if (!state.teamId || state.phase === "title") { renderTitle(); return; }
     applyTeamColor();
