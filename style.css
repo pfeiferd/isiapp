@@ -1,0 +1,307 @@
+/* ============================================================
+   Schatzsuche im Ziegeleipark – Schatzkarten-Look
+   ============================================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --parchment: #f6e7c6;
+  --parchment-dark: #eed9a8;
+  --ink: #4a2f1b;
+  --ink-soft: #6b4a2e;
+  --gold: #d4a017;
+  --gold-dark: #a87b0e;
+  --red: #b3402a;
+  --green: #2a6f4e;
+  --card: #fdf6e3;
+  --team-color: #d4a017;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: "Chalkboard SE", "Comic Sans MS", "Segoe Print", "Comic Neue", cursive, sans-serif;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(212,160,23,0.18), transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(179,64,42,0.12), transparent 50%),
+    var(--parchment);
+  color: var(--ink);
+  min-height: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+#app {
+  max-width: 520px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+}
+
+/* ---------- Screens ---------- */
+.screen { display: none; flex: 1; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ---------- Typografie ---------- */
+h1 {
+  font-size: 1.7rem;
+  text-align: center;
+  color: var(--ink);
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+  margin: 8px 0;
+}
+h2 { font-size: 1.3rem; margin-bottom: 8px; }
+p  { line-height: 1.45; }
+
+.subtitle {
+  text-align: center;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.big-emoji { text-align: center; font-size: 3.2rem; margin: 6px 0; }
+
+/* ---------- Karten / Boxen ---------- */
+.card {
+  background: var(--card);
+  border: 3px dashed var(--gold-dark);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 8px 0;
+  box-shadow: 0 3px 0 rgba(74,47,27,0.15);
+}
+
+.card.solid { border-style: solid; }
+
+.card h3 {
+  font-size: 1.05rem;
+  color: var(--gold-dark);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.story-text { white-space: pre-line; font-size: 0.98rem; }
+
+.rules { list-style: none; }
+.rules li {
+  padding: 5px 0 5px 28px;
+  position: relative;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+.rules li::before { content: "🧭"; position: absolute; left: 0; }
+
+/* ---------- Buttons ---------- */
+button {
+  font-family: inherit;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+  border: none;
+  border-radius: 14px;
+  padding: 16px 18px;
+  width: 100%;
+  margin: 6px 0;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(74,47,27,0.35);
+  transition: transform 0.05s;
+}
+button:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(74,47,27,0.35); }
+button:disabled {
+  background: #b9ab8c;
+  color: #efe6d2;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+button.secondary {
+  background: var(--card);
+  color: var(--ink-soft);
+  border: 2px solid var(--ink-soft);
+  box-shadow: 0 3px 0 rgba(74,47,27,0.2);
+  font-size: 1rem;
+  padding: 12px;
+}
+button.danger { background: linear-gradient(180deg, #c9563e, var(--red)); }
+button.team-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.2rem;
+  background: var(--card);
+  color: var(--ink);
+  border: 3px solid var(--team-color);
+  box-shadow: 0 3px 0 rgba(74,47,27,0.2);
+}
+button.team-btn .team-emoji { font-size: 1.8rem; }
+
+/* ---------- Kopfzeile im Spiel ---------- */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card);
+  border: 3px solid var(--team-color);
+  border-radius: 14px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+.hud .hud-team { font-size: 1.5rem; }
+.hud .hud-progress { font-weight: bold; font-size: 0.95rem; color: var(--ink-soft); }
+.hud .hud-timer {
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+  font-size: 1.15rem;
+  background: var(--ink);
+  color: var(--parchment);
+  border-radius: 10px;
+  padding: 4px 10px;
+}
+
+/* ---------- Kompass ---------- */
+.compass-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0;
+}
+.compass {
+  width: min(58vw, 230px);
+  height: min(58vw, 230px);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 40%, #fdf6e3, var(--parchment-dark));
+  border: 6px solid var(--gold-dark);
+  box-shadow: inset 0 0 18px rgba(74,47,27,0.25), 0 4px 0 rgba(74,47,27,0.25);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.compass .arrow {
+  font-size: min(30vw, 120px);
+  line-height: 1;
+  transition: transform 0.4s ease;
+  will-change: transform;
+}
+.compass .north {
+  position: absolute;
+  top: 6px; left: 50%;
+  transform-origin: 50% calc(min(29vw, 115px) - 6px);
+  translate: -50% 0;
+  font-weight: bold;
+  color: var(--red);
+  font-size: 1rem;
+  transition: transform 0.4s ease;
+}
+.distance {
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.distance small { font-size: 1.1rem; }
+.geo-status {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  text-align: center;
+  min-height: 1.2em;
+}
+.direction-text { font-size: 1rem; color: var(--ink-soft); }
+
+/* ---------- Rätsel ---------- */
+.answer-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+input[type="text"], input[type="number"], input[type="tel"] {
+  font-family: inherit;
+  font-size: 1.5rem;
+  text-align: center;
+  width: 100%;
+  padding: 12px;
+  border: 3px solid var(--gold-dark);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  -webkit-user-select: text;
+  user-select: text;
+}
+.attempts { text-align: center; color: var(--ink-soft); font-size: 0.9rem; margin-top: 6px; }
+
+/* ---------- Strafe ---------- */
+.penalty-count {
+  font-size: 4rem;
+  text-align: center;
+  font-weight: bold;
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+  margin: 12px 0;
+}
+
+/* ---------- Ergebnis ---------- */
+.result-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--gold-dark);
+  font-size: 1.05rem;
+}
+.result-line.total {
+  border-bottom: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--green);
+  margin-top: 6px;
+}
+
+/* ---------- Diverses ---------- */
+.spacer { flex: 1; }
+.center { text-align: center; }
+.small { font-size: 0.85rem; color: var(--ink-soft); }
+.hidden { display: none !important; }
+
+.badge {
+  display: inline-block;
+  background: var(--team-color);
+  color: #fff;
+  border-radius: 10px;
+  padding: 2px 10px;
+  font-weight: bold;
+}
+
+/* Spielleiter-Menü */
+.gm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(42,28,15,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+}
+.gm-overlay.active { display: flex; }
+.gm-box {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 18px;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* dezenter Fußbereich */
+footer {
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(74,47,27,0.5);
+  padding: 8px 0 2px;
+}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup – Schatzsuche Ziegeleipark</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🛠️</text></svg>">
+  <style>
+    .wp-row { border: 2px solid var(--gold-dark); border-radius: 12px; padding: 10px; margin: 8px 0; background: var(--card); }
+    .wp-row h3 { color: var(--ink); margin-bottom: 4px; }
+    .wp-coords { font-family: monospace; font-size: 0.9rem; }
+    .wp-dist { font-weight: bold; color: var(--green); }
+    .wp-row .row-btns { display: flex; gap: 8px; }
+    .wp-row .row-btns button { font-size: 0.95rem; padding: 10px; margin: 6px 0 0; }
+    textarea { width: 100%; height: 220px; font-family: monospace; font-size: 0.8rem; border: 2px solid var(--gold-dark); border-radius: 10px; padding: 8px; -webkit-user-select: text; user-select: text; }
+    .changed { color: var(--red); font-weight: bold; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="big-emoji">🛠️</div>
+  <h1>Setup-Modus</h1>
+  <p class="subtitle">Nur für den Spielleiter – Koordinaten erfassen &amp; Routen prüfen</p>
+
+  <div class="card solid">
+    <h3>📡 Deine aktuelle Position</h3>
+    <p class="wp-coords" id="mypos">Warte auf GPS …</p>
+    <p class="small">Tipp: Stell dich genau an den Punkt (Versteck/Station) und drücke dort „📍 Hier setzen".</p>
+  </div>
+
+  <div id="wp-list"></div>
+
+  <div class="card">
+    <h3>🛤️ Routenlängen (Luftlinie)</h3>
+    <p class="small">Basierend auf den aktuellen Koordinaten. Reale Wege sind länger – aber gut zum Vergleichen der Teams. Bei großen Unterschieden: <code>offsetSeconds</code> in config.js anpassen (60&nbsp;s pro ~80&nbsp;m Unterschied sind ein guter Richtwert).</p>
+    <div id="route-lengths"></div>
+  </div>
+
+  <div class="card">
+    <h3>📤 Export für config.js</h3>
+    <p class="small">Ersetze die lat/lon-Werte in <b>config.js</b> mit diesen Zeilen (oder schicke sie dir per Mail/Messenger):</p>
+    <textarea id="export-area" readonly></textarea>
+    <button class="secondary" id="btn-copy">📋 In Zwischenablage kopieren</button>
+    <button class="danger" id="btn-clear">🗑 Erfasste Punkte verwerfen</button>
+  </div>
+
+  <p class="small center">Erfasste Punkte werden auf DIESEM Gerät zwischengespeichert (localStorage),<br>bis du sie in die config.js übernimmst.</p>
+</div>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  "use strict";
+  const CFG = window.GAME_CONFIG;
+  const DRAFT_KEY = "ziegelei-setup-draft-v1";
+  let draft = {};   // { W1: {lat, lon}, BASE: {lat, lon} }
+  let myPos = null;
+
+  try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY)) || {}; } catch (e) {}
+
+  const $ = (id) => document.getElementById(id);
+
+  const points = [{ id: "BASE", name: "🏠 " + CFG.start.name, orig: CFG.start }]
+    .concat(CFG.waypoints.map((w) => ({ id: w.id, name: w.id + " – " + w.name, orig: w })));
+
+  function coordsOf(id) {
+    const p = points.find((x) => x.id === id);
+    return draft[id] || { lat: p.orig.lat, lon: p.orig.lon };
+  }
+
+  function haversine(a, b) {
+    const R = 6371000, toRad = (d) => (d * Math.PI) / 180;
+    const dLat = toRad(b.lat - a.lat), dLon = toRad(b.lon - a.lon);
+    const h = Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLon / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+
+  function render() {
+    const list = $("wp-list");
+    list.innerHTML = "";
+    points.forEach((p) => {
+      const c = coordsOf(p.id);
+      const isDraft = !!draft[p.id];
+      const div = document.createElement("div");
+      div.className = "wp-row";
+      const dist = myPos ? Math.round(haversine(myPos, c)) + " m entfernt" : "";
+      div.innerHTML =
+        `<h3>${p.name} ${isDraft ? '<span class="changed">● neu erfasst</span>' : ""}</h3>` +
+        `<p class="wp-coords">${c.lat.toFixed(6)}, ${c.lon.toFixed(6)} <span class="wp-dist">${dist}</span></p>` +
+        `<div class="row-btns">` +
+        `<button class="secondary" data-set="${p.id}">📍 Hier setzen</button>` +
+        `<button class="secondary" data-map="${p.id}">🗺️ Karte</button>` +
+        `</div>`;
+      list.appendChild(div);
+    });
+    list.querySelectorAll("[data-set]").forEach((b) =>
+      b.addEventListener("click", () => {
+        if (!myPos) { alert("Noch kein GPS-Signal!"); return; }
+        draft[b.dataset.set] = { lat: myPos.lat, lon: myPos.lon };
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        render();
+      })
+    );
+    list.querySelectorAll("[data-map]").forEach((b) =>
+      b.addEventListener("click", () => {
+        const c = coordsOf(b.dataset.map);
+        window.open(`https://www.openstreetmap.org/?mlat=${c.lat}&mlon=${c.lon}#map=18/${c.lat}/${c.lon}`, "_blank");
+      })
+    );
+    renderRoutes();
+    renderExport();
+  }
+
+  function renderRoutes() {
+    const el = $("route-lengths");
+    const base = coordsOf("BASE");
+    const rows = CFG.teams.map((t) => {
+      let total = 0, prev = base;
+      t.route.forEach((id) => { const c = coordsOf(id); total += haversine(prev, c); prev = c; });
+      total += haversine(prev, base);
+      return { t, total };
+    });
+    const min = Math.min(...rows.map((r) => r.total));
+    el.innerHTML = rows.map((r) =>
+      `<div class="result-line"><span>${r.t.emoji} ${r.t.name}</span>` +
+      `<b>${(r.total / 1000).toFixed(2).replace(".", ",")} km` +
+      (r.total - min > 150 ? ` <span class="changed">(+${Math.round(r.total - min)} m)</span>` : "") +
+      `</b></div>`
+    ).join("");
+  }
+
+  function renderExport() {
+    let out = "// Erfasste Koordinaten vom " + new Date().toLocaleString("de-DE") + "\n";
+    const b = coordsOf("BASE");
+    out += `// Basislager (start):\n//   lat: ${b.lat.toFixed(6)}, lon: ${b.lon.toFixed(6)},\n\n`;
+    points.filter((p) => p.id !== "BASE").forEach((p) => {
+      const c = coordsOf(p.id);
+      out += `// ${p.name}${draft[p.id] ? "  [NEU ERFASST]" : "  [unverändert]"}\n`;
+      out += `//   lat: ${c.lat.toFixed(6)}, lon: ${c.lon.toFixed(6)},\n`;
+    });
+    $("export-area").value = out;
+  }
+
+  $("btn-copy").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText($("export-area").value); alert("Kopiert! 📋"); }
+    catch (e) { $("export-area").select(); document.execCommand("copy"); alert("Kopiert! 📋"); }
+  });
+  $("btn-clear").addEventListener("click", () => {
+    if (confirm("Alle vor Ort erfassten Punkte verwerfen?")) {
+      draft = {}; localStorage.removeItem(DRAFT_KEY); render();
+    }
+  });
+
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(
+      (pos) => {
+        myPos = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        $("mypos").textContent =
+          `${myPos.lat.toFixed(6)}, ${myPos.lon.toFixed(6)}  (±${Math.round(pos.coords.accuracy)} m)`;
+        render();
+      },
+      (err) => { $("mypos").textContent = "⚠️ " + err.message; },
+      { enableHighAccuracy: true, maximumAge: 2000 }
+    );
+  } else {
+    $("mypos").textContent = "❌ Kein GPS verfügbar.";
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

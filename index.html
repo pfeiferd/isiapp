@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#f6e7c6">
+  <title>Schatzsuche im Ziegeleipark</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🗺️</text></svg>">
+</head>
+<body>
+<div id="app">
+
+  <!-- ================= Titel & Teamwahl ================= -->
+  <section class="screen active" id="screen-title">
+    <div class="big-emoji">🗺️🏴‍☠️</div>
+    <h1 id="title-heading">Schatzsuche</h1>
+    <p class="subtitle" id="title-teaser"></p>
+    <div class="card">
+      <h3>⚓ Wählt euer Team</h3>
+      <div id="team-list"></div>
+    </div>
+    <div class="spacer"></div>
+    <footer>Viel Glück, Schatzsucher! · <span id="version">v1</span></footer>
+  </section>
+
+  <!-- ================= Team-Code ================= -->
+  <section class="screen" id="screen-code">
+    <div class="big-emoji" id="code-emoji">🦊</div>
+    <h1 id="code-team-name"></h1>
+    <div class="card">
+      <h3>🔑 Geheimer Team-Code</h3>
+      <p>Euer Spielleiter hat euch einen 4-stelligen Code gegeben. Gebt ihn ein:</p>
+      <input type="tel" id="code-input" maxlength="4" inputmode="numeric" placeholder="····" autocomplete="off">
+      <p class="attempts hidden" id="code-error">❌ Falscher Code – fragt euren Spielleiter!</p>
+    </div>
+    <button id="btn-code-ok">Code prüfen</button>
+    <button class="secondary" id="btn-code-back">↩ Anderes Team wählen</button>
+    <div class="spacer"></div>
+  </section>
+
+  <!-- ================= Geschichte & Regeln ================= -->
+  <section class="screen" id="screen-story">
+    <div class="big-emoji">📜</div>
+    <h1 id="story-title"></h1>
+    <div class="card">
+      <p class="story-text" id="story-text"></p>
+    </div>
+    <div class="card">
+      <h3>📏 Die Regeln</h3>
+      <ul class="rules" id="story-rules"></ul>
+    </div>
+    <div class="card solid">
+      <h3>📡 GPS-Check</h3>
+      <p class="geo-status" id="gps-check-status">Noch nicht geprüft.</p>
+    </div>
+    <button id="btn-start">🚀 Abenteuer starten!</button>
+    <p class="small center">Beim Start fragt das Handy nach dem Standort – unbedingt erlauben!</p>
+  </section>
+
+  <!-- ================= Navigation ================= -->
+  <section class="screen" id="screen-nav">
+    <div class="hud">
+      <span class="hud-team" id="hud-team">🦊</span>
+      <span class="hud-progress" id="hud-progress">Station 1/8</span>
+      <span class="hud-timer" id="hud-timer">00:00</span>
+    </div>
+    <div class="card solid center">
+      <h3 id="nav-target-label">🎯 Nächstes Ziel</h3>
+      <p id="nav-hint" style="font-size:1.05rem;"></p>
+    </div>
+    <div class="compass-wrap">
+      <div class="compass">
+        <span class="north" id="compass-north">N</span>
+        <span class="arrow" id="compass-arrow">⬆️</span>
+      </div>
+      <div class="distance"><span id="nav-distance">– m</span></div>
+      <div class="direction-text" id="nav-direction"></div>
+      <div class="geo-status" id="nav-geo-status">Warte auf GPS …</div>
+    </div>
+    <div class="spacer"></div>
+    <button id="btn-arrived" disabled>🏁 Wir sind da!</button>
+    <button class="secondary hidden" id="btn-simulate">🧪 Ankunft simulieren (Testmodus)</button>
+  </section>
+
+  <!-- ================= Station: Versteck + Rätsel ================= -->
+  <section class="screen" id="screen-station">
+    <div class="hud">
+      <span class="hud-team" id="hud-team2">🦊</span>
+      <span class="hud-progress" id="hud-progress2"></span>
+      <span class="hud-timer" id="hud-timer2">00:00</span>
+    </div>
+    <div class="big-emoji">📍</div>
+    <h1 id="station-name"></h1>
+    <div class="card" id="station-cache-card">
+      <h3>💰 Das Versteck</h3>
+      <p id="station-cache"></p>
+    </div>
+    <div class="card solid">
+      <h3>🧠 Jakobs Rätsel</h3>
+      <p id="station-riddle" style="font-size:1.05rem;"></p>
+      <div class="answer-row">
+        <input type="tel" id="answer-input" inputmode="numeric" placeholder="Zahl eingeben" autocomplete="off">
+      </div>
+      <p class="attempts" id="station-attempts"></p>
+    </div>
+    <button id="btn-answer">🔓 Antwort abschicken</button>
+  </section>
+
+  <!-- ================= Zeitstrafe ================= -->
+  <section class="screen" id="screen-penalty">
+    <div class="big-emoji">⏳</div>
+    <h1>Zeitstrafe!</h1>
+    <div class="card center">
+      <p>Das war leider <b>falsch</b>. Jakobs Geist lacht euch aus … Ihr müsst warten:</p>
+      <div class="penalty-count" id="penalty-count">2:00</div>
+      <p class="small" id="penalty-info"></p>
+    </div>
+    <div class="spacer"></div>
+  </section>
+
+  <!-- ================= Richtig! ================= -->
+  <section class="screen" id="screen-success">
+    <div class="big-emoji">🎉</div>
+    <h1>Richtig!</h1>
+    <div class="card center">
+      <p id="success-text">Das Rätsel ist gelöst – weiter geht's!</p>
+    </div>
+    <button id="btn-next">➡️ Zum nächsten Ziel</button>
+  </section>
+
+  <!-- ================= Zu oft falsch ================= -->
+  <section class="screen" id="screen-skipped">
+    <div class="big-emoji">😅</div>
+    <h1>Weiter geht's!</h1>
+    <div class="card center">
+      <p>Das war knifflig! Die richtige Antwort war <b id="skipped-answer"></b>.</p>
+      <p>Kopf hoch – auf zur nächsten Station!</p>
+    </div>
+    <button id="btn-next2">➡️ Zum nächsten Ziel</button>
+  </section>
+
+  <!-- ================= Ziel-Eingabe & Ergebnis ================= -->
+  <section class="screen" id="screen-finish">
+    <div class="big-emoji">🏆</div>
+    <h1>Geschafft!</h1>
+    <div class="card" id="finish-input-card">
+      <h3>💰 Eure Beute</h3>
+      <p>Wie viele Goldmünzen habt ihr unterwegs eingesammelt? (Der Spielleiter zählt mit!)</p>
+      <input type="tel" id="coins-input" inputmode="numeric" placeholder="Anzahl Münzen" autocomplete="off">
+      <button id="btn-finish">🏆 Ergebnis anzeigen</button>
+    </div>
+    <div class="card solid hidden" id="finish-result-card">
+      <h3>📜 Euer Ergebnis</h3>
+      <div class="result-line"><span>⏱️ Gebrauchte Zeit</span><b id="res-time"></b></div>
+      <div class="result-line"><span>💰 Münz-Gutschrift</span><b id="res-coins"></b></div>
+      <div class="result-line" id="res-offset-line"><span>🛤️ Routen-Ausgleich</span><b id="res-offset"></b></div>
+      <div class="result-line"><span>🧠 Gelöste Rätsel</span><b id="res-solved"></b></div>
+      <div class="result-line total"><span>🏅 Endzeit</span><b id="res-total"></b></div>
+      <p class="center" style="margin-top:10px;">Zeigt diesen Bildschirm eurem Spielleiter!</p>
+      <p class="center" id="res-rank" style="font-size:1.2rem; margin-top:6px;"></p>
+    </div>
+  </section>
+
+  <!-- ================= Spielleiter-Menü ================= -->
+  <div class="gm-overlay" id="gm-overlay">
+    <div class="gm-box">
+      <h2>🎩 Spielleiter-Menü</h2>
+      <p class="small">Nur für Erwachsene! (7× auf die Uhr tippen öffnet dieses Menü)</p>
+      <button class="secondary" id="gm-skip">⏭ Aktuelle Station überspringen</button>
+      <button class="secondary" id="gm-testmode">🧪 Testmodus an/aus</button>
+      <button class="danger" id="gm-reset">🗑 Spiel komplett zurücksetzen</button>
+      <button id="gm-close">Schließen</button>
+    </div>
+  </div>
+
+</div>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
