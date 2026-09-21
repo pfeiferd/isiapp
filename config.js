@@ -159,7 +159,7 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
       name: "Jakobs Uhr",
       hint: "Im äußersten Winkel von Jakobs Reich, wo der Weg sich um die Gärten schmiegt, blieb die Zeit stehen.",
       lat: 49.13476, lon: 9.18226, radius: 25,   // NO-Ecke – vor Ort markanten Punkt wählen!
-      cache: "Hier ist das letzte Versteck! Hinter/unter dem vereinbarten Objekt steckt eine Dose. EINE Münze nehmen – und dann nichts wie zurück zum Basislager!",
+      cache: "Hinter/unter dem vereinbarten Objekt steckt eine Dose. EINE Münze nehmen und Dose genau so zurücklegen!",
       riddle: {
         text: "Auf Jakobs alter Uhr steht der kleine Zeiger auf der 3, der große auf der 12. Wie viele Minuten dauert es, bis der GROSSE Zeiger auf der 6 steht?",
         answer: "30",
