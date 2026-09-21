@@ -2,6 +2,14 @@
    Schatzsuche im Ziegeleipark – Schatzkarten-Look
    ============================================================ */
 
+@font-face {
+  font-family: "Patrick Hand";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/PatrickHand-Regular.woff2") format("woff2");
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -26,7 +34,7 @@ html {
 }
 
 body {
-  font-family: "Chalkboard SE", "Comic Sans MS", "Segoe Print", "Comic Neue", cursive, sans-serif;
+  font-family: "Patrick Hand", "Chalkboard SE", "Comic Sans MS", "Segoe Print", "Comic Neue", cursive, sans-serif;
   background:
     radial-gradient(ellipse at 20% 10%, rgba(212,160,23,0.18), transparent 50%),
     radial-gradient(ellipse at 80% 90%, rgba(179,64,42,0.12), transparent 50%),
