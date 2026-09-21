@@ -16,7 +16,7 @@ const CONFIG = {
     arrivalRadius: 25,      // Meter: so nah muss man ran, bis "Wir sind da!" freigeschaltet wird
     penaltySeconds: 120,    // Zeitstrafe (Wartezeit) pro falscher Antwort
     maxAttempts: 3,         // nach so vielen Fehlversuchen geht es ohne Lösung weiter
-    coinBonusSeconds: 120,  // jede gesammelte Münze zählt so viele Sekunden Zeitgutschrift
+    coinBonusSeconds: 240,  // jede gesammelte Münze zählt so viele Sekunden Zeitgutschrift
     gmCode: "7913",         // Spielleiter-Code: als Antwort eingegeben => Station wird übersprungen
   },
 

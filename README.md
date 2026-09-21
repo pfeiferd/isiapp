@@ -33,7 +33,7 @@ seinen Goldschatz im Ziegeleipark versteckt. Die Teams folgen seiner Rätselspur
    so laufen die Teams nicht nebeneinander her.
 6. Nach der letzten Station geht es zurück zum **Basislager (Im Jockele 13)** –
    erst dort stoppt die Uhr.
-7. Ergebnis: Bruttozeit − 2 min pro Goldmünze − Routen-Ausgleich = **Endzeit**.
+7. Ergebnis: Bruttozeit − 4 min pro Goldmünze − Routen-Ausgleich = **Endzeit**.
    Das Team mit der kleinsten Endzeit gewinnt.
 
 ## Vorbereitung (Checkliste)
