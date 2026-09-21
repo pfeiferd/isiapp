@@ -246,13 +246,14 @@
     $("nav-geo-status").textContent = `GPS-Genauigkeit: ±${Math.round(accuracy)} m` +
       (accuracy > 35 ? " – freien Himmel suchen!" : "");
 
-    // Nadel zeigt immer nach Norden; N- und Zielmarkierung wandern relativ zur Blickrichtung am Rand entlang
+    // Gehäuse (inkl. "N") steht fest – nur die Nadel dreht sich (echtes Kompassverhalten,
+    // die Kinder müssen sich selbst drehen, bis die Nadel aufs feste "N" zeigt).
+    // Die Zielmarkierung wandert relativ zur Blickrichtung am Rand entlang.
     let hdg = compassHeading;
     if (hdg == null && heading != null && !isNaN(heading)) hdg = heading;
     const northRot = hdg == null ? 0 : -hdg;
     const targetRot = hdg == null ? brg : brg - hdg;
     $("compass-arrow").style.transform = `rotate(${northRot}deg)`;
-    $("compass-north").style.transform = `rotate(${northRot}deg)`;
     $("compass-target").style.transform = `rotate(${targetRot}deg)`;
 
     const radius = tgt.radius || CFG.settings.arrivalRadius;
