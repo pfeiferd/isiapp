@@ -313,9 +313,19 @@
     }
     if (h === null) return;
     compassGot = true;
-    $("compass-arrow").style.transform = "rotate(" + (-h) + "deg)";
+    setRotation("compass-arrow", -h);
     $("compass-readout").textContent = Math.round(h) + "° " + cardinal(h) +
       (compassAbsolute ? "" : "  (nicht nordbezogen!)");
+  }
+
+  // Wie im Spiel: fortlaufender Winkel, damit die Nadel am Nord-Übergang (359 -> 1 Grad)
+  // nicht einmal fast ganz herumdreht, statt zwei Grad weiterzuwandern.
+  var contRotation = {};
+  function setRotation(id, deg) {
+    var prev = contRotation[id] || 0;
+    var next = prev + ((((deg - prev) % 360) + 540) % 360) - 180;
+    contRotation[id] = next;
+    $(id).style.transform = "rotate(" + next + "deg)";
   }
 
   function cardinal(b) {

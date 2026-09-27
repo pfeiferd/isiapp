@@ -255,6 +255,18 @@
     updateNavDisplay();
   }
 
+  // CSS interpoliert Drehungen numerisch: von 359deg auf 1deg dreht die Nadel einmal
+  // fast ganz herum statt 2 Grad weiter – genau beim Ausrichten nach Norden. Deshalb
+  // führen wir pro Element einen fortlaufenden Winkel mit und addieren immer nur den
+  // kürzesten Weg (-180..180 Grad).
+  const contRotation = {};
+  function setRotation(id, deg) {
+    const prev = contRotation[id] || 0;
+    const next = prev + ((((deg - prev) % 360) + 540) % 360) - 180;
+    contRotation[id] = next;
+    $(id).style.transform = `rotate(${next}deg)`;
+  }
+
   function updateNavDisplay() {
     if (state.phase !== "nav") return;
     const tgt = currentTarget();
@@ -270,7 +282,7 @@
       ? (dist / 1000).toFixed(2).replace(".", ",") + " km"
       : Math.round(dist) + " m";
     $("nav-direction-label").textContent = cardinal(brg);
-    $("nav-direction-arrow").style.transform = `rotate(${Math.round(brg / 45) * 45}deg)`;
+    setRotation("nav-direction-arrow", Math.round(brg / 45) * 45);
     $("nav-geo-status").textContent = `GPS-Genauigkeit: ±${Math.round(accuracy)} m` +
       (accuracy > 35 ? " – freien Himmel suchen!" : "");
 
@@ -280,8 +292,8 @@
     let hdg = compassHeading;
     if (hdg == null && heading != null && !isNaN(heading)) hdg = heading;
     const northRot = hdg == null ? 0 : -hdg;
-    $("compass-arrow").style.transform = `rotate(${northRot}deg)`;
-    $("compass-target").style.transform = `rotate(${brg}deg)`;
+    setRotation("compass-arrow", northRot);
+    setRotation("compass-target", brg);
 
     const radius = tgt.radius || CFG.settings.arrivalRadius;
     const arrived = dist <= Math.max(radius, Math.min(accuracy, 40));
