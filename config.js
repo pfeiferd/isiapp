@@ -2,11 +2,10 @@
 //  KONFIGURATION – Schatzsuche im Ziegeleipark
 //  Diese Datei ist die EINZIGE, die du anpassen musst.
 //
-//  Die Koordinaten stammen aus OpenStreetMap (Stand 09/2026):
-//  Basislager, Ziegeleisee, Spielplatz Bruhweg, Aussichtspunkt
-//  und Haus am See sind echte Orte. W1/W5/W7/W8 sind sinnvoll
-//  im Park platziert, sollten aber VOR ORT feinjustiert werden
-//  (setup.html öffnen -> hinlaufen -> "Hier setzen" drücken).
+//  Alle Koordinaten wurden am 27.09.2026 VOR ORT mit setup.html
+//  erfasst (GPS am Versteck) und sind damit die verbindlichen
+//  Spielkoordinaten. Die Routenlängen und karte.html sind auf
+//  diesen Stand neu gerechnet.
 // ============================================================
 
 const CONFIG = {
@@ -17,6 +16,11 @@ const CONFIG = {
     penaltySeconds: 120,    // Zeitstrafe (Wartezeit) pro falscher Antwort
     maxAttempts: 3,         // nach so vielen Fehlversuchen geht es ohne Lösung weiter
     coinBonusSeconds: 240,  // jede gesammelte Münze zählt so viele Sekunden Zeitgutschrift
+    boxBonusSeconds: 120,   // jede mitgebrachte LEERE Dose zählt so viele Sekunden Zeitgutschrift.
+                            // Bewusst halb so viel wie eine Münze: Wer an einer Station letztes
+                            // Team ist, findet die Dose leer und nimmt sie mit. Das hilft langsamen
+                            // Teams beim Aufholen, ohne dass absichtliches Trödeln rentabel wird
+                            // (ein Platz später an einer Station kostet ~25 min, bringt aber nur 2).
     gmCode: "7913",         // Spielleiter-Code: als Antwort eingegeben => Station wird übersprungen
   },
 
@@ -49,7 +53,8 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
       "Erst wenn ihr nah genug seid, könnt ihr »Wir sind da!« drücken.",
       "Antworten sind immer ZAHLEN. Falsche Antwort = Zeitstrafe (warten!).",
       "An jeder Station liegen Goldmünzen versteckt: Nehmt genau EINE pro Team und lasst den Rest liegen!",
-      "Jede Münze bringt am Ende Zeitgutschrift. Das schnellste Team (nach Gutschrift) gewinnt.",
+      "Ist die Dose nach eurer Münze LEER? Dann wart ihr das letzte Team hier – nehmt die leere Dose mit!",
+      "Jede Münze und jede mitgebrachte Dose bringt am Ende Zeitgutschrift. Das schnellste Team (nach Gutschrift) gewinnt.",
       "Achtet auf Wege, Radfahrer und andere Parkbesucher!",
     ],
   },
@@ -57,8 +62,8 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
   // ---------- Start & Ziel (Basislager) ----------
   start: {
     name: "Basislager – Im Jockele 13",
-    lat: 49.129997,         // aus OpenStreetMap (Gebäude Im Jockele 13)
-    lon: 9.187387,
+    lat: 49.130135,         // vor Ort erfasst 27.09.2026
+    lon: 9.187214,
     radius: 30,
     finishText: "Lauft zurück zum Basislager! Dort endet eure Schatzsuche – die Zeit läuft, bis ihr ankommt!",
   },
@@ -71,9 +76,9 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     {
       id: "W1",
       name: "Das alte Ziegelei-Tor",
-      hint: "Folgt dem 🎯-Zielsymbol! Ihr seid richtig, wo man Jakobs Reich betritt und eine Tafel die Besucher grüßt.",
-      lat: 49.13145, lon: 9.18385, radius: 25,   // Parkeingang SO – vor Ort prüfen!
-      cache: "Direkt unter der Begrüßungstafel liegt eine kleine Dose. EINE Münze nehmen, Dose genau so zurücklegen!",
+      hint: "Ihr seid richtig, wo man Jakobs Reich betritt und eine Tafel die Besucher grüßt.",
+      lat: 49.131738, lon: 9.183736, radius: 25,   // vor Ort erfasst 27.09.2026
+      cache: "Jakobs Dose liegt in der Däumlingshöhle. EINE Münze nehmen, Dose genau so zurücklegen!",
       riddle: {
         text: "Jakobs Ringofen hatte 14 Kammern. In jeder Kammer wurden genau 250 Ziegel gebrannt. Wie viele Ziegel waren das bei einem Brand insgesamt?",
         answer: "3500",
@@ -83,9 +88,9 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     {
       id: "W2",
       name: "Der Wolkenspiegel",
-      hint: "Folgt dem 🎯-Zielsymbol zu dem Ort, an dem sich der Himmel spiegelt und gefiederte Wächter schwimmen.",
-      lat: 49.13357, lon: 9.18037, radius: 25,   // Ziegeleisee (OSM) – Bank am Ufer wählen!
-      cache: "Sucht unter der Bank mit Blick aufs Wasser: Dort klebt/liegt eine kleine Dose. Nehmt EINE Goldmünze für euer Team und legt die Dose genau so zurück!",
+      hint: "Sucht den Ort, an dem sich der Himmel spiegelt und gefiederte Wächter schwimmen.",
+      lat: 49.133223, lon: 9.180682, radius: 25,   // vor Ort erfasst 27.09.2026
+      cache: "Am Ufer wartet die rettende Hilfe – dort ist Jakobs Dose versteckt. Nehmt EINE Goldmünze für euer Team und legt die Dose genau so zurück!",
       riddle: {
         text: "Auf dem See schwimmen 5 Entenfamilien. Jede Mutter hat 6 Küken dabei. Wie viele Enten schwimmen insgesamt auf dem See (Mütter mitzählen)?",
         answer: "35",
@@ -96,8 +101,8 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
       id: "W3",
       name: "Der Hexentreff",
       hint: "Hier oben, so raunt man, trafen sich nachts die Hexen und blickten weit über Jakobs Reich. Ihr seid richtig, wenn auch ihr weit ins Land schauen könnt.",
-      lat: 49.13188, lon: 9.17630, radius: 30,   // Aussichtspunkt West (OSM)
-      cache: "Unter der Bank mit dem besten Ausblick liegt der Hexen-Schatz: eine kleine Dose. EINE Münze nehmen, Dose genau so zurücklegen!",
+      lat: 49.131884, lon: 9.176261, radius: 30,   // vor Ort erfasst 27.09.2026
+      cache: "Der Hexen-Schatz liegt bei den Stufen des Walpurgisplatzes. EINE Münze nehmen, Dose genau so zurücklegen!",
       riddle: {
         text: "In der Vollmondnacht treffen sich hier 3 Hexen zum Tanz – und jede bringt 2 Schwestern mit. Dann kommt noch der Kater der ältesten Hexe dazu und tanzt mit! Wie viele tanzen im Hexenkreis?",
         answer: "10",
@@ -107,9 +112,9 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     {
       id: "W4",
       name: "Der Tummelplatz",
-      hint: "Wo früher Jakobs Arbeiter rasteten, wird heute getobt und geklettert. Das 🎯-Zielsymbol zeigt euch den Weg!",
-      lat: 49.13466, lon: 9.18054, radius: 25,   // Spielplatz Bruhweg (OSM)
-      cache: "Am Rand des Spielplatzes, beim dicksten Baum, liegt unter einem auffälligen Stein eine Dose. EINE Münze nehmen, Stein wieder drauflegen!",
+      hint: "Wo früher Jakobs Arbeiter rasteten, wird heute getobt und geklettert.",
+      lat: 49.134630, lon: 9.180469, radius: 25,   // vor Ort erfasst 27.09.2026
+      cache: "Jakobs Dose liegt am höchsten Punkt des Tummelplatzes. EINE Münze nehmen, Dose genau so zurücklegen!",
       riddle: {
         text: "Ich bin eine geheime Zahl. Verdoppelt man mich und zählt dann 8 dazu, kommt 30 heraus. Welche Zahl bin ich?",
         answer: "11",
@@ -119,9 +124,9 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
     {
       id: "W5",
       name: "Die alte Lehmgrube",
-      hint: "Unter dieser Wiese schlummert die Grube, aus der Jakob einst seinen Lehm holte. Nur das 🎯-Zielsymbol kennt die Stelle!",
-      lat: 49.13180, lon: 9.17750, radius: 30,   // SW-Wiese – vor Ort markanten Punkt wählen!
-      cache: "Am Rand der Wiese, unter einem platten Stein, liegt eine kleine Dose mit Jakobs Lehm-Schatz. EINE Münze nehmen, Stein genau so zurücklegen!",
+      hint: "Unter dieser Wiese schlummert die Grube, aus der Jakob einst seinen Lehm holte.",
+      lat: 49.131943, lon: 9.177911, radius: 30,   // vor Ort erfasst 27.09.2026
+      cache: "Jakobs Lehm-Schatz steckt im Felsenspalt. EINE Münze nehmen, Dose genau so zurücklegen!",
       riddle: {
         text: "Jakob schaffte jeden Tag doppelt so viele Karren Lehm aus der Grube wie am Tag davor: Am 1. Tag 2 Karren, am 2. Tag 4, dann 8, dann 16 … Wie viele Karren waren es am 5. Tag?",
         answer: "32",
@@ -132,38 +137,39 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
       id: "W6",
       name: "Das Rote Tor der Zeit",
       hint: "Sucht Jakobs Tor der Zeit! Ihr erkennt es erst, wenn ihr fast davor steht. Dann: hindurchschauen!",
-      lat: 49.133645, lon: 9.174423, radius: 25,   // Foto-Spot Mostbirnenweg (OSM)
-      cache: "Am Fuß des roten Rahmens liegt unter einem auffälligen Stein eine kleine Dose. EINE Münze nehmen, Stein genau so zurücklegen!",
+      lat: 49.133606, lon: 9.174536, radius: 25,   // vor Ort erfasst 27.09.2026
+      cache: "Jakobs Dose liegt an der hölzernen Ruhestätte. EINE Münze nehmen, Dose genau so zurücklegen!",
       riddle: {
-        text: "Wer durch das Rote Tor der Zeit schaut, blickt genau 100 Jahre zurück – bis in die Tage der alten Ziegelei! Wir haben das Jahr 2026. Welches Jahr seht ihr durch das Tor?",
-        answer: "1926",
-        tip: "2026 minus 100.",
+        text: "Wer durch das Rote Tor der Zeit schaut, blickt genau 111 Jahre zurück – bis in die Tage der alten Ziegelei! Wir haben das Jahr 2026. Welches Jahr seht ihr durch das Tor?",
+        answer: "1915",
+        tip: "2026 minus 111 – schriftlich rechnen hilft!",
       },
     },
     {
       id: "W7",
       name: "Die Säule des Himmels",
-      hint: "Folgt dem 🎯-Zielsymbol zu Jakobs steinernem Wächter, der den Himmel trägt. Erst ganz nah verrät er euch sein Geheimnis.",
-      lat: 49.133292, lon: 9.185217, radius: 30,   // Wasserturm Böckingen (OSM)
-      cache: "Am Fuß des Turms, zwischen den Wurzeln des nächsten Baumes, liegt eine kleine Dose. EINE Münze nehmen, alles wieder gut tarnen!",
+      hint: "Jakobs steinerner Wächter trägt hier den Himmel. Erst ganz nah verrät er euch sein Geheimnis.",
+      lat: 49.133242, lon: 9.185432, radius: 30,   // vor Ort erfasst 27.09.2026
+      cache: "Jakobs Dose liegt am Tor zur Erhebung. EINE Münze nehmen, Dose genau so zurücklegen!",
       riddle: {
-        // Baujahr laut Wikipedia: 1929 – bitte vor Ort prüfen, dass die
-        // Jahreszahl am Turm sichtbar ist (sonst Rätsel/Antwort anpassen)!
+        // Die Jahrestafel hängt über dem "Tor zur Erhebung" (vor Ort bestätigt
+        // 27.09.2026). Die Jahreszahl 1929 stammt aus Wikipedia – beim Verstecken
+        // der Dose einmal ablesen und hier ggf. korrigieren.
         text: "Die Säule des Himmels verrät ihr Alter nur dem, der genau hinschaut: Sucht an ihr die Jahreszahl ihrer Erbauung und gebt sie als Code ein!",
         answer: "1929",
-        tip: "Geht einmal um den Turm herum und schaut auch über den Eingang.",
+        tip: "Sucht das Tor zur Erhebung – und schaut darüber!",
       },
     },
     {
       id: "W8",
-      name: "Jakobs Uhr",
-      hint: "Im äußersten Winkel von Jakobs Reich, wo der Weg sich um die Gärten schmiegt, blieb die Zeit stehen.",
-      lat: 49.13476, lon: 9.18226, radius: 25,   // NO-Ecke – vor Ort markanten Punkt wählen!
-      cache: "Hinter/unter dem vereinbarten Objekt steckt eine Dose. EINE Münze nehmen und Dose genau so zurücklegen!",
+      name: "Jakobs Gebote",
+      hint: "Im äußersten Winkel von Jakobs Reich, wo der Weg sich um die Gärten schmiegt, steht geschrieben, was hier erlaubt ist und was nicht.",
+      lat: 49.134670, lon: 9.181937, radius: 25,   // vor Ort erfasst 27.09.2026
+      cache: "Bei der Tafel mit den Geboten steckt eine gut getarnte Dose. EINE Münze nehmen und Dose genau so zurücklegen!",
       riddle: {
-        text: "Auf Jakobs alter Uhr steht der kleine Zeiger auf der 3, der große auf der 12. Wie viele Minuten dauert es, bis der GROSSE Zeiger auf der 6 steht?",
-        answer: "30",
-        tip: "Der große Zeiger braucht 60 Minuten für eine ganze Runde.",
+        text: "Jakob schrieb seinen Ziegelbrennern 10 Gebote auf eine Tafel. Jeder seiner 4 Lehrjungen musste jedes Gebot zweimal abschreiben. Wie viele Zeilen schrieben die Lehrjungen zusammen?",
+        answer: "80",
+        tip: "10 Gebote × 4 Lehrjungen × 2 Mal abschreiben.",
       },
     },
   ],
@@ -171,8 +177,10 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
   // ---------- Teams & Routen ----------
   // Jedes Team besucht ALLE Stationen, aber in anderer Reihenfolge,
   // damit die Teams nicht nebeneinander herlaufen.
-  // "offsetSeconds": Zeit-Ausgleich, falls eine Route deutlich länger ist
-  //                  (positiv = Gutschrift für dieses Team).
+  // "offsetSeconds": Zeit-Ausgleich für längere Routen (positiv = Gutschrift,
+  //                  wird am Ende abgezogen). Berechnet aus dem echten Fußweg
+  //                  (Valhalla-Routing, Stand 27.09.2026) gegen die kürzeste
+  //                  Route (4,41 km) bei ~4 km/h Kindertempo.
   // "code": 4-stelliger Team-Code – nur noch Rückfalloption. Normalerweise
   //         scannt das Team seinen QR-Code (qrcodes.html), der die App mit
   //         ?team=T1 öffnet; dann entfallen Teamwahl und Code-Eingabe.
@@ -183,30 +191,30 @@ Goldmünzen. Aber Vorsicht: Wer falsch antwortet, verliert wertvolle Zeit!`,
   teams: [
     {
       id: "T1", name: "Die Füchse", emoji: "🦊", color: "#e2711d", code: "1111",
-      route: ["W2", "W8", "W3", "W6", "W4", "W5", "W7", "W1"],   // ≈ 3,58 km Luftlinie
-      offsetSeconds: 0,
+      route: ["W2", "W8", "W3", "W6", "W4", "W5", "W7", "W1"],   // 4,63 km Fußweg, 3,40 km Luftlinie
+      offsetSeconds: 195,
     },
     {
       id: "T2", name: "Die Eulen", emoji: "🦉", color: "#7b5ea7", code: "2222",
-      route: ["W6", "W3", "W5", "W7", "W1", "W4", "W8", "W2"],   // ≈ 3,56 km Luftlinie
-      offsetSeconds: 0,
+      route: ["W6", "W3", "W5", "W7", "W1", "W4", "W8", "W2"],   // 4,50 km Fußweg, 3,40 km Luftlinie
+      offsetSeconds: 75,
     },
     {
       id: "T3", name: "Die Dachse", emoji: "🦡", color: "#4f6d7a", code: "3333",
-      route: ["W1", "W5", "W4", "W8", "W7", "W2", "W3", "W6"],   // ≈ 3,52 km Luftlinie
-      offsetSeconds: 0,
+      route: ["W1", "W5", "W4", "W8", "W7", "W2", "W3", "W6"],   // 4,44 km Fußweg, 3,42 km Luftlinie
+      offsetSeconds: 30,
     },
     {
       id: "T4", name: "Die Igel", emoji: "🦔", color: "#8a5a44", code: "4444",
-      route: ["W3", "W6", "W2", "W4", "W5", "W1", "W8", "W7"],   // ≈ 3,53 km Luftlinie
+      route: ["W3", "W6", "W2", "W4", "W5", "W1", "W8", "W7"],   // 4,41 km Fußweg, 3,45 km Luftlinie
       offsetSeconds: 0,
     },
     {
       id: "T5", name: "Die Falken", emoji: "🦅", color: "#2a6f4e", code: "5555",
-      route: ["W4", "W2", "W6", "W5", "W3", "W7", "W1", "W8"],   // ≈ 3,59 km Luftlinie, 5,09 km realer Fußweg (Valhalla)
-      // Falken-Route ist ~480m länger als der Schnitt der anderen 4 Teams (4,61 km) –
-      // Zeitvorsprung als Ausgleich (bei ~4 km/h Kindertempo ≈ 7 Min), wird am Ende abgezogen.
-      offsetSeconds: 420,
+      route: ["W4", "W2", "W6", "W5", "W3", "W7", "W1", "W8"],   // 5,02 km Fußweg, 3,61 km Luftlinie
+      // Längste Route (5,02 km) – 611 m mehr als die kürzeste
+      // (4,41 km, T4); Ausgleich bei ~4 km/h Kindertempo.
+      offsetSeconds: 555,
     },
   ],
 };

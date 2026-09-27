@@ -352,3 +352,12 @@ footer {
   color: rgba(74,47,27,0.5);
   padding: 8px 0 2px;
 }
+
+/* Hinweis auf die leere Dose, steht unter jedem Versteck-Text */
+.cache-note {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  border-top: 1px dashed currentColor;
+  padding-top: 8px;
+}

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Handy-Check – Schatzsuche Ziegeleipark</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>📱</text></svg>">
+  <style>
+    body { -webkit-user-select: text; user-select: text; }
+    .check { border: 2px solid var(--gold-dark); border-radius: 12px; padding: 10px 12px; margin: 10px 0; background: var(--card); }
+    .check-head { display: flex; align-items: baseline; gap: 8px; }
+    .check-icon { font-size: 1.3rem; flex: none; line-height: 1.2; }
+    .check-title { font-weight: bold; color: var(--ink); flex: 1; }
+    .check-status { font-size: 1rem; margin-top: 4px; }
+    .check-status.ok   { color: var(--green); }
+    .check-status.warn { color: var(--gold-dark); }
+    .check-status.fail { color: var(--red); font-weight: bold; }
+    .check .fix { font-size: 0.95rem; color: var(--ink-soft); margin-top: 6px; border-top: 1px dashed var(--gold-dark); padding-top: 6px; }
+    .check button { font-size: 1rem; padding: 9px 12px; margin: 8px 0 0; }
+    .verdict { border: 3px solid var(--gold-dark); border-radius: 14px; padding: 12px; margin: 10px 0 4px; text-align: center; background: var(--card); }
+    .verdict b { font-size: 1.25rem; display: block; margin-bottom: 2px; }
+    .readout { font-family: monospace; font-size: 1.05rem; text-align: center; margin-top: 6px; }
+    .btn-row { display: flex; gap: 8px; }
+    .btn-row button { flex: 1; }
+    ol.manual, ul.manual { margin: 6px 0 0 1.1rem; }
+    ol.manual li, ul.manual li { margin: 6px 0; font-size: 1rem; }
+    .hidden { display: none; }
+    code { font-family: monospace; background: var(--parchment-dark); padding: 0 3px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <div class="big-emoji">📱</div>
+  <h1>Handy-Check</h1>
+  <p class="subtitle">Bitte einmal vor der Schatzsuche durchführen – dauert 2 Minuten</p>
+
+  <div class="card">
+    <p>Bei der Schatzsuche führt das Handy die Kinder per <b>GPS und Kompass</b> von Station
+      zu Station. Damit das am Tag selbst klappt, prüft diese Seite einmal durch, ob das
+      Handy alles kann und ob die nötigen Freigaben erteilt sind.</p>
+    <p class="small" style="margin-top:8px;">Diese Seite verändert nichts am Handy und
+      speichert nichts. Bitte auf <b>dem Handy</b> öffnen, das das Kind mitnimmt – und mit
+      dem Browser, der auch am Spieltag benutzt wird (iPhone: Safari, Android: Chrome).</p>
+  </div>
+
+  <div class="verdict" id="verdict">
+    <b id="verdict-title">⏳ Test noch nicht abgeschlossen</b>
+    <span class="small" id="verdict-text">Bitte unten die beiden Knöpfe drücken.</span>
+  </div>
+
+  <!-- 1 -->
+  <div class="check" id="t-secure">
+    <div class="check-head"><span class="check-icon">⏳</span><span class="check-title">1. Sichere Verbindung</span></div>
+    <div class="check-status">wird geprüft …</div>
+    <div class="fix hidden"></div>
+  </div>
+
+  <!-- 2 -->
+  <div class="check" id="t-storage">
+    <div class="check-head"><span class="check-icon">⏳</span><span class="check-title">2. Spielstand speichern</span></div>
+    <div class="check-status">wird geprüft …</div>
+    <div class="fix hidden"></div>
+  </div>
+
+  <!-- 3 -->
+  <div class="check" id="t-gps">
+    <div class="check-head"><span class="check-icon">⏳</span><span class="check-title">3. Standort (GPS)</span></div>
+    <div class="check-status">noch nicht getestet</div>
+    <p class="small">Das Handy fragt gleich nach der Erlaubnis für den Standort –
+      bitte <b>erlauben</b>. Am besten draußen oder am Fenster testen.</p>
+    <div class="readout" id="gps-readout"></div>
+    <button id="btn-gps">📡 Standort jetzt testen</button>
+    <div class="fix hidden"></div>
+  </div>
+
+  <!-- 4 -->
+  <div class="check" id="t-compass">
+    <div class="check-head"><span class="check-icon">⏳</span><span class="check-title">4. Kompass – zeigt die Nadel nach Norden?</span></div>
+    <div class="check-status">noch nicht getestet</div>
+    <p class="small">Auf dem iPhone kommt dazu eine Rückfrage – bitte <b>erlauben</b>.</p>
+    <button id="btn-compass">🧭 Kompass jetzt testen</button>
+
+    <div id="compass-box" class="hidden">
+      <div class="compass-wrap">
+        <div class="compass">
+          <span class="north-marker">N</span>
+          <svg class="arrow" id="compass-arrow" viewBox="0 0 40 100" xmlns="http://www.w3.org/2000/svg">
+            <polygon class="needle-north" points="20,2 30,50 20,42 10,50" stroke-width="1.5" stroke-linejoin="round"/>
+            <polygon class="needle-south" points="20,98 30,50 20,58 10,50" stroke-width="1.5" stroke-linejoin="round"/>
+            <circle class="needle-pivot" cx="20" cy="50" r="6" stroke-width="1.5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="readout" id="compass-readout">–</div>
+      <p class="small" style="margin-top:8px;">Haltet das Handy flach in der Hand und dreht
+        euch einmal im Kreis. Die <b>rote Nadelspitze</b> muss dabei immer in dieselbe
+        Richtung im Raum zeigen (nach Norden) – so wie bei einem echten Kompass. Genau so
+        navigieren die Kinder später: Sie drehen sich, bis die Nadel auf das <b>N</b> zeigt.</p>
+      <div class="btn-row">
+        <button id="btn-compass-ok">✅ Klappt</button>
+        <button id="btn-compass-bad" class="secondary">✖ Nadel eiert</button>
+      </div>
+    </div>
+    <div class="fix hidden"></div>
+  </div>
+
+  <!-- 5 -->
+  <div class="check" id="t-wake">
+    <div class="check-head"><span class="check-icon">⏳</span><span class="check-title">5. Bildschirm bleibt an</span></div>
+    <div class="check-status">wird mit dem Standort-Test geprüft</div>
+    <div class="fix hidden"></div>
+  </div>
+
+  <div class="card solid">
+    <h3>🔧 Das könnt nur ihr einstellen</h3>
+    <p class="small">Diese Punkte kann die Seite nicht prüfen – bitte am Spieltag morgens
+      kurz durchgehen:</p>
+    <ol class="manual">
+      <li><b>Akku voll laden.</b> GPS und Dauerbildschirm ziehen ordentlich Strom –
+        eine Powerbank ist Gold wert.</li>
+      <li><b>Energiesparmodus aus.</b> Er drosselt GPS und schaltet den Bildschirm ab.</li>
+      <li><b>Bildschirmsperre auf „nie" oder 5 Minuten.</b>
+        iPhone: Einstellungen → Anzeige &amp; Helligkeit → Automatische Sperre.
+        Android: Einstellungen → Display → Bildschirm-Timeout.</li>
+      <li><b>Genauen Standort erlauben.</b>
+        iPhone: Einstellungen → Datenschutz → Ortungsdienste → Safari → „Beim Verwenden" +
+        „Genauer Standort" an.
+        Android: Einstellungen → Standort → „Standortgenauigkeit verbessern" an.</li>
+      <li><b>Lautlos aus / Ton an</b>, damit man euch erreichen kann.</li>
+      <li><b>Mobile Daten aktiv lassen.</b> Die Seite läuft zwar auch offline weiter, muss
+        aber einmal geladen werden.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>📖 Und am Spieltag?</h3>
+    <p>Installiert werden muss nichts. Das Kind bekommt von uns einen <b>QR-Code</b> –
+      einmal mit der Handy-Kamera scannen, und die Schatzsuche startet im Browser.
+      Bitte sorgt nur dafür, dass das Handy dabei <b>Internet</b> hat.</p>
+    <p class="small" style="margin-top:8px;">Die Spiel-App selbst bleibt bis dahin unter
+      Verschluss – dort stehen schließlich die Rätsel drin 😉</p>
+  </div>
+
+  <div class="card">
+    <h3>💬 Ergebnis weitergeben</h3>
+    <p class="small">Falls etwas rot ist: Knopf drücken und den Text an den Spielleiter
+      schicken – dann können wir vorher eine Lösung finden.</p>
+    <button id="btn-copy">📋 Ergebnis kopieren</button>
+    <div class="fix hidden" id="copy-note"></div>
+  </div>
+
+  <p class="small center" style="margin:14px 0 8px;">Danke fürs Testen – und viel Spaß bei
+    der Schatzsuche! 🏴‍☠️</p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ---------- Testzustand ----------
+  var ICON = { wait: "⏳", ok: "✅", warn: "⚠️", fail: "❌" };
+  var results = {};
+
+  function setStatus(id, state, text, fix) {
+    var box = $(id);
+    results[id] = { state: state, text: text };
+    box.querySelector(".check-icon").textContent = ICON[state];
+    var st = box.querySelector(".check-status");
+    st.textContent = text;
+    st.className = "check-status " + state;
+    var fixEl = box.querySelector(".fix");
+    if (fix) { fixEl.innerHTML = fix; fixEl.classList.remove("hidden"); }
+    else { fixEl.classList.add("hidden"); }
+    updateVerdict();
+  }
+
+  function updateVerdict() {
+    var all = ["t-secure", "t-storage", "t-gps", "t-compass", "t-wake"];
+    var states = all.map(function (k) { return results[k] ? results[k].state : "wait"; });
+    var title, text;
+    if (states.indexOf("wait") !== -1) {
+      title = "⏳ Test noch nicht abgeschlossen";
+      text = "Bitte oben die Knöpfe „Standort testen" + "“ und „Kompass testen“ drücken.";
+    } else if (states.indexOf("fail") !== -1) {
+      title = "❌ So klappt es noch nicht";
+      text = "Bitte die rot markierten Punkte anschauen – der Hinweis steht jeweils direkt darunter.";
+    } else if (states.indexOf("warn") !== -1) {
+      title = "⚠️ Fast startklar";
+      text = "Ein Punkt ist nicht ideal, das Spiel läuft aber. Bitte den gelben Hinweis lesen.";
+    } else {
+      title = "✅ Alles startklar!";
+      text = "Das Handy kann alles, was die Schatzsuche braucht. Danke!";
+    }
+    $("verdict-title").textContent = title;
+    $("verdict-text").textContent = text;
+  }
+
+  // ---------- 1. Sichere Verbindung ----------
+  (function () {
+    if (window.isSecureContext) {
+      setStatus("t-secure", "ok", "Verbindung ist sicher (https) – GPS ist erlaubt.");
+    } else {
+      setStatus("t-secure", "fail",
+        "Diese Seite läuft nicht über eine sichere Verbindung.",
+        "Ohne <code>https://</code> sperrt der Browser das GPS komplett. Bitte den Link so " +
+        "öffnen, wie er verschickt wurde (er beginnt mit <code>https://</code>) – nicht als " +
+        "gespeicherte Datei und nicht über eine Suchmaschinen-Vorschau.");
+    }
+  })();
+
+  // ---------- 2. Speicher ----------
+  (function () {
+    try {
+      localStorage.setItem("__eltern_test__", "1");
+      localStorage.removeItem("__eltern_test__");
+      setStatus("t-storage", "ok", "Der Spielstand kann gespeichert werden.");
+    } catch (e) {
+      setStatus("t-storage", "fail",
+        "Der Browser darf nichts speichern.",
+        "Das Spiel würde bei jedem Versehen (Seite neu laden, Anruf dazwischen) von vorn " +
+        "beginnen. Meist liegt es am <b>privaten Modus</b> bzw. <b>Inkognito-Tab</b> – bitte " +
+        "die Seite in einem normalen Tab öffnen.");
+    }
+  })();
+
+  // ---------- 3. Standort ----------
+  var gpsWatch = null, gpsBest = null, gpsTimer = null;
+
+  function gpsFix(code) {
+    if (code === 1) {
+      return "Die Standort-Freigabe wurde abgelehnt oder ist gesperrt.<br>" +
+        "<b>iPhone:</b> Einstellungen → Apps → Safari → Standort → „Fragen“ oder „Erlauben“, " +
+        "dann diese Seite neu laden.<br>" +
+        "<b>Android:</b> In der Adresszeile auf das Schloss-Symbol tippen → Berechtigungen → " +
+        "Standort erlauben. Zusätzlich Einstellungen → Standort muss eingeschaltet sein.";
+    }
+    if (code === 3) {
+      return "Es kam in 30 Sekunden keine Position an. Das passiert oft in Gebäuden. " +
+        "Bitte ans Fenster oder kurz vor die Tür gehen und erneut testen.";
+    }
+    return "Das Handy konnte den Standort nicht bestimmen. Bitte prüfen, ob der Standort " +
+      "in den Systemeinstellungen grundsätzlich eingeschaltet ist, und erneut testen.";
+  }
+
+  function stopGps(state, text, fix) {
+    if (gpsWatch !== null) { navigator.geolocation.clearWatch(gpsWatch); gpsWatch = null; }
+    if (gpsTimer) { clearTimeout(gpsTimer); gpsTimer = null; }
+    $("btn-gps").textContent = "📡 Standort erneut testen";
+    $("btn-gps").disabled = false;
+    setStatus("t-gps", state, text, fix);
+  }
+
+  $("btn-gps").addEventListener("click", function () {
+    testWakeLock();
+    if (!navigator.geolocation) {
+      setStatus("t-gps", "fail", "Dieser Browser kennt kein GPS.",
+        "Bitte einen aktuellen Safari (iPhone) oder Chrome (Android) verwenden.");
+      return;
+    }
+    this.disabled = true;
+    this.textContent = "📡 suche Satelliten …";
+    setStatus("t-gps", "wait", "Standort wird gesucht – bitte Freigabe erteilen.");
+    $("gps-readout").textContent = "warte auf Signal …";
+    gpsBest = null;
+
+    gpsWatch = navigator.geolocation.watchPosition(
+      function (pos) {
+        var a = pos.coords.accuracy;
+        if (gpsBest === null || a < gpsBest) gpsBest = a;
+        $("gps-readout").textContent = "Genauigkeit: ±" + Math.round(a) + " m";
+        if (a <= 30) {
+          stopGps("ok", "Standort kommt an, Genauigkeit ±" + Math.round(a) + " m. Sehr gut.");
+        }
+      },
+      function (err) { stopGps("fail", "Kein Standort: " + err.message, gpsFix(err.code)); },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 }
+    );
+
+    gpsTimer = setTimeout(function () {
+      if (gpsBest === null) {
+        stopGps("fail", "In 30 Sekunden kam keine Position an.", gpsFix(3));
+      } else if (gpsBest <= 60) {
+        stopGps("warn", "Standort kommt an, aber nur auf ±" + Math.round(gpsBest) + " m genau.",
+          "Für das Spiel reicht das meistens – die Stationen werden ab 25–30 m Entfernung " +
+          "freigeschaltet. Drinnen ist GPS immer ungenau; bitte zur Sicherheit noch einmal " +
+          "draußen testen.");
+      } else {
+        stopGps("fail", "Der Standort ist mit ±" + Math.round(gpsBest) + " m zu ungenau.",
+          "Bitte draußen erneut testen. Bleibt es ungenau: „Genauer Standort“ einschalten " +
+          "(iPhone: Einstellungen → Datenschutz → Ortungsdienste → Safari; " +
+          "Android: Einstellungen → Standort → Standortgenauigkeit) und den Energiesparmodus ausschalten.");
+      }
+    }, 30000);
+  });
+
+  // ---------- 4. Kompass ----------
+  var compassGot = false, compassAbsolute = false;
+
+  function onOrient(e) {
+    var h = null;
+    if (e.webkitCompassHeading != null) {            // iOS
+      h = e.webkitCompassHeading; compassAbsolute = true;
+    } else if (e.absolute && e.alpha != null) {      // Android (absolut)
+      h = (360 - e.alpha) % 360; compassAbsolute = true;
+    } else if (e.alpha != null && !compassAbsolute) {
+      // nur relativ – zeigt NICHT nach Norden. Wird nur genutzt, solange gar kein
+      // absoluter Wert kam; sonst würde dieser Zweig auf Android den guten Wert
+      // aus "deviceorientationabsolute" wieder überschreiben.
+      h = (360 - e.alpha) % 360;
+    }
+    if (h === null) return;
+    compassGot = true;
+    $("compass-arrow").style.transform = "rotate(" + (-h) + "deg)";
+    $("compass-readout").textContent = Math.round(h) + "° " + cardinal(h) +
+      (compassAbsolute ? "" : "  (nicht nordbezogen!)");
+  }
+
+  function cardinal(b) {
+    var names = ["Norden", "Nordosten", "Osten", "Südosten", "Süden", "Südwesten", "Westen", "Nordwesten"];
+    return names[Math.round(b / 45) % 8];
+  }
+
+  $("btn-compass").addEventListener("click", async function () {
+    this.disabled = true;
+    setStatus("t-compass", "wait", "Kompass wird gelesen …");
+    if (typeof DeviceOrientationEvent === "undefined") {
+      this.disabled = false;
+      setStatus("t-compass", "fail", "Dieser Browser kennt keinen Kompass.",
+        "Bitte einen aktuellen Safari (iPhone) oder Chrome (Android) verwenden.");
+      return;
+    }
+    // iPhone: Freigabe muss aus einem Tippen heraus angefragt werden – wie später im Spiel
+    if (typeof DeviceOrientationEvent.requestPermission === "function") {
+      var res = "denied";
+      try { res = await DeviceOrientationEvent.requestPermission(); } catch (e) {}
+      if (res !== "granted") {
+        this.disabled = false;
+        setStatus("t-compass", "fail", "Die Kompass-Freigabe wurde abgelehnt.",
+          "Ohne sie zeigt die Nadel im Spiel nicht nach Norden. Bitte die Seite neu laden, " +
+          "noch einmal auf „Kompass jetzt testen“ tippen und die Rückfrage mit " +
+          "<b>„Erlauben“</b> beantworten. Hilft das nicht: Einstellungen → Apps → Safari → " +
+          "„Bewegung &amp; Ausrichtung“ erlauben.");
+        return;
+      }
+    }
+    $("compass-box").classList.remove("hidden");
+    window.addEventListener("deviceorientationabsolute", onOrient, true);
+    window.addEventListener("deviceorientation", onOrient, true);
+
+    var btn = this;
+    setTimeout(function () {
+      btn.disabled = false;
+      btn.textContent = "🧭 Kompass erneut testen";
+      if (!compassGot) {
+        setStatus("t-compass", "fail", "Es kommen keine Kompassdaten an.",
+          "Manche Geräte haben keinen Magnetsensor. Bitte beim Spielleiter melden – " +
+          "wir geben dem Kind dann ein anderes Handy mit.");
+      } else if (!compassAbsolute) {
+        setStatus("t-compass", "warn", "Der Kompass liefert keine Nordrichtung.",
+          "Die Nadel dreht sich zwar, zeigt aber nicht verlässlich nach Norden. Bitte das " +
+          "Handy einmal in einer liegenden Acht durch die Luft bewegen (das kalibriert den " +
+          "Sensor), weg von Magneten und Handyhüllen mit Magnetverschluss, und erneut testen. " +
+          "Die Kinder kommen zur Not auch nur mit der Entfernungsanzeige ans Ziel.");
+      } else {
+        setStatus("t-compass", "ok", "Kompass liefert die Nordrichtung – " +
+          "bitte unten noch kurz mit dem Auge prüfen.");
+      }
+    }, 4000);
+  });
+
+  $("btn-compass-ok").addEventListener("click", function () {
+    setStatus("t-compass", "ok", "Kompass geprüft und bestätigt: Die Nadel zeigt nach Norden.");
+  });
+  $("btn-compass-bad").addEventListener("click", function () {
+    setStatus("t-compass", "warn", "Die Nadel zeigt nicht stabil nach Norden.",
+      "Bitte das Handy einmal in einer liegenden Acht durch die Luft bewegen – das kalibriert " +
+      "den Sensor – und den Test wiederholen. Handyhüllen mit Magnet, Autohalterungen und " +
+      "Kopfhörer stören den Kompass ebenfalls. Bleibt es dabei: kein Beinbruch, die Kinder " +
+      "finden die Stationen auch über die Entfernungsanzeige. Bitte kurz Bescheid geben.");
+  });
+
+  // ---------- 5. Bildschirm wach halten ----------
+  var wakeTested = false;
+  async function testWakeLock() {
+    if (wakeTested) return;
+    wakeTested = true;
+    if (!("wakeLock" in navigator)) {
+      setStatus("t-wake", "warn", "Der Browser kann den Bildschirm nicht wachhalten.",
+        "Bitte vor dem Spiel die automatische Bildschirmsperre auf „nie“ oder 5 Minuten " +
+        "stellen (siehe Liste unten), sonst geht der Bildschirm ständig aus.");
+      return;
+    }
+    try {
+      var lock = await navigator.wakeLock.request("screen");
+      setStatus("t-wake", "ok", "Der Bildschirm kann während des Spiels anbleiben.");
+      setTimeout(function () { try { lock.release(); } catch (e) {} }, 3000);
+    } catch (e) {
+      setStatus("t-wake", "warn", "Der Bildschirm konnte nicht wachgehalten werden.",
+        "Meist liegt es am Energiesparmodus. Bitte ihn ausschalten und die automatische " +
+        "Bildschirmsperre hochsetzen (siehe Liste unten).");
+    }
+  }
+
+  // ---------- Ergebnis kopieren ----------
+  $("btn-copy").addEventListener("click", async function () {
+    var names = {
+      "t-secure": "Sichere Verbindung", "t-storage": "Spielstand speichern",
+      "t-gps": "Standort (GPS)", "t-compass": "Kompass", "t-wake": "Bildschirm wach"
+    };
+    var lines = ["Handy-Check Schatzsuche", ""];
+    Object.keys(names).forEach(function (k) {
+      var r = results[k] || { state: "wait", text: "nicht getestet" };
+      lines.push(ICON[r.state] + " " + names[k] + ": " + r.text);
+    });
+    lines.push("", "Gerät: " + navigator.userAgent);
+    var txt = lines.join("\n");
+    var note = $("copy-note");
+    note.classList.remove("hidden");
+    try {
+      await navigator.clipboard.writeText(txt);
+      note.textContent = "Kopiert! Jetzt in WhatsApp/SMS einfügen und abschicken.";
+    } catch (e) {
+      note.innerHTML = "Kopieren ging nicht – bitte diesen Text markieren und senden:" +
+        "<br><br>" + txt.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/\n/g, "<br>");
+    }
+  });
+
+  updateVerdict();
+})();
+</script>
+</body>
+</html>

@@ -20,6 +20,8 @@
     penaltyUntil: null,     // Epoch ms
     solvedCount: 0,
     wrongCount: 0,
+    coins: 0,
+    boxes: 0,          // mitgebrachte leere Dosen
     testMode: false,
   };
 
@@ -170,6 +172,8 @@
       penaltyUntil: null,
       solvedCount: 0,
       wrongCount: 0,
+      coins: 0,
+      boxes: 0,
       testMode: state.testMode,
     };
     save();
@@ -404,17 +408,24 @@
 
   function showResult() {
     const t = team();
-    const inputVal = parseInt($("coins-input").value, 10);
-    const coins = Math.max(0, isNaN(inputVal) ? (state.coins || 0) : inputVal);
+    const readCount = (id, fallback) => {
+      const v = parseInt($(id).value, 10);
+      return Math.max(0, isNaN(v) ? (fallback || 0) : v);
+    };
+    const coins = readCount("coins-input", state.coins);
+    const boxes = readCount("boxes-input", state.boxes);
     state.coins = coins;
+    state.boxes = boxes;
     const gross = elapsedSeconds();
     const coinBonus = coins * CFG.settings.coinBonusSeconds;
+    const boxBonus = boxes * (CFG.settings.boxBonusSeconds || 0);
     const offset = t.offsetSeconds || 0;
-    const total = Math.max(0, gross - coinBonus - offset);
+    const total = Math.max(0, gross - coinBonus - boxBonus - offset);
     const routeLen = route().length;
 
     $("res-time").textContent = fmtTime(gross);
     $("res-coins").textContent = `− ${fmtTime(coinBonus)} (${coins} 💰)`;
+    $("res-boxes").textContent = `− ${fmtTime(boxBonus)} (${boxes} 🥫)`;
     $("res-offset-line").classList.toggle("hidden", offset === 0);
     $("res-offset").textContent = `− ${fmtTime(offset)}`;
     $("res-solved").textContent = `${state.solvedCount} von ${routeLen}`;

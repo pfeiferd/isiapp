@@ -15,6 +15,9 @@ seinen Goldschatz im Ziegeleipark versteckt. Die Teams folgen seiner Rätselspur
 | `config.js`   | **Alles Anpassbare**: Geschichte, Stationen, Rätsel, Teams   |
 | `setup.html`  | Spielleiter-Tool: Koordinaten vor Ort erfassen, Routen prüfen|
 | `qrcodes.html`| Spielleiter-Tool: QR-Code pro Team zum Ausdrucken            |
+| `muenzen.html`| Spielleiter-Tool: Team-Münzen zum Ausschneiden               |
+| `karte.html`  | Übersicht aller Teamrouten auf echten Fußwegen               |
+| `eltern.html` | Handy-Check für die Eltern – Link vorab verschicken          |
 | `style.css`   | Schatzkarten-Design                                          |
 | `app.js`      | Spiellogik                                                   |
 
@@ -30,18 +33,21 @@ seinen Goldschatz im Ziegeleipark versteckt. Die Teams folgen seiner Rätselspur
    jedes Team nimmt genau EINE) und immer ein **Rätsel mit Zahlenantwort**.
    - Falsche Antwort → **2 Minuten Zeitstrafe** (Wartebildschirm mit Tipp).
    - Nach 3 Fehlversuchen wird die Lösung gezeigt und es geht weiter.
+   - Ist die Dose nach der eigenen Münze **leer**, war das Team das letzte hier –
+     dann nimmt es die leere Dose mit (siehe unten).
 5. Jedes Team läuft dieselben 8 Stationen in **anderer Reihenfolge** –
    so laufen die Teams nicht nebeneinander her.
 6. Nach der letzten Station geht es zurück zum **Basislager (Im Jockele 13)** –
    erst dort stoppt die Uhr.
-7. Ergebnis: Bruttozeit − 4 min pro Goldmünze − Routen-Ausgleich = **Endzeit**.
-   Das Team mit der kleinsten Endzeit gewinnt.
+7. Ergebnis: Bruttozeit − 4 min pro Goldmünze − 2 min pro leerer Dose −
+   Routen-Ausgleich = **Endzeit**. Das Team mit der kleinsten Endzeit gewinnt.
 
 ## Vorbereitung (Checkliste)
 
 ### 1. Koordinaten setzen (WICHTIG!)
 
-Die Koordinaten in `config.js` sind **Platzhalter**. Zwei Wege:
+Die Koordinaten in `config.js` wurden am **27.09.2026 vor Ort erfasst** und
+sind einsatzbereit. Wenn sich ein Versteck ändert, gibt es zwei Wege:
 
 - **Vor Ort (empfohlen):** `setup.html` auf dem Handy öffnen, zu jedem
   Versteck laufen, „📍 Hier setzen" drücken. Am Ende die exportierten Werte in
@@ -60,9 +66,26 @@ entsprechend anpassen.
 ### 3. Caches verstecken
 
 Kleine wasserdichte Dosen/Beutel mit „Goldmünzen" an allen 8 Stationen (siehe
-`cache`-Text) verstecken. Genug Münzen für alle Teams einlegen! Jedes Team
-hat sein eigenes Münzdesign (siehe `muenzen.html` zum Ausdrucken) – so lässt
-sich nicht schummeln, wer welche Münze schon eingesammelt hat.
+`cache`-Text) verstecken. Jedes Team hat sein eigenes Münzdesign (siehe
+`muenzen.html` zum Ausdrucken) – so lässt sich nicht schummeln, wer welche
+Münze schon eingesammelt hat.
+
+**In jede Dose kommt genau EINE Münze pro mitspielendem Team.** Damit ist die
+Dose exakt dann leer, wenn das letzte Team seine Münze genommen hat – dieses
+Team nimmt die Dose mit und bekommt dafür **2 min Zeitgutschrift**
+(`boxBonusSeconds`). Das hilft langsamen Teams beim Aufholen, ohne dass
+Trödeln rentabel wird: Ein Platz weiter hinten an einer Station kostet rund
+25 Minuten echte Zeit und bringt nur 2 Minuten zurück.
+
+> ⚠️ **Wenn T5 „Die Falken" nicht mitspielt, dürfen die T5-Münzen nicht in die
+> Dosen** – sonst wird keine Dose je leer und der Bonus läuft ins Leere.
+
+Nebeneffekt: Die Dosen kommen von selbst wieder im Basislager an. Nicht alle –
+findet ein Team seine Dose nicht, bleibt sie draußen liegen und muss
+eingesammelt werden. Am Ende abgleichen, welche Stationen fehlen.
+
+Zurückgebrachte Dosen **müssen leer sein**. Ist noch eine Münze drin, hat das
+Team die Dose zu früh eingesteckt.
 
 ### 4. QR-Codes für die Teams drucken
 
@@ -79,11 +102,30 @@ dem QR-Blatt).
 
 ### 5. Routenlängen prüfen
 
-`setup.html` zeigt unten die Luftlinien-Länge jeder Team-Route. Bei deutlichen
-Unterschieden (> 150 m) beim benachteiligten Team `offsetSeconds` in
-`config.js` erhöhen (Richtwert: 60 s pro ~80 m Luftlinie).
+Die `offsetSeconds` in `config.js` sind bereits aus den **echten Fußwegen**
+gerechnet (Valhalla-Routing, Stand 27.09.2026): kürzeste Route = 0 s, jedes
+andere Team bekommt seinen Mehrweg bei ~4 km/h Kindertempo gutgeschrieben.
+`karte.html` zeigt Route, Länge und Ausgleich pro Team.
 
-### 6. Generalprobe
+Wenn du Stationen oder Routen änderst, musst du das neu rechnen. `setup.html`
+zeigt unterwegs nur die **Luftlinie** – als grober Richtwert: 60 s pro ~80 m
+Mehrweg, ab ~150 m Unterschied lohnt sich der Ausgleich.
+
+### 6. Eltern den Handy-Check schicken
+
+Ein paar Tage vorher den Link zu `eltern.html` an die Eltern schicken
+(`https://…github.io/isiapp/eltern.html`). Die Seite prüft auf dem Handy des
+Kindes: sichere Verbindung, Speicher, GPS-Freigabe samt Genauigkeit, Kompass
+(inkl. iOS-Rückfrage „Bewegung & Ausrichtung") und Bildschirm-Wachhalten.
+Dazu die Punkte, die nur die Eltern einstellen können: Akku, Energiesparmodus,
+Bildschirmsperre, genauer Standort.
+
+Wichtig ist vor allem der **Kompass-Test**: Ohne nordbezogenen Sensor dreht
+sich die Nadel zwar, zeigt aber nicht nach Norden – das merkt man sonst erst
+im Gelände. Die Seite hat dafür einen „Ergebnis kopieren"-Knopf, damit Eltern
+dir Probleme vorab schicken können.
+
+### 7. Generalprobe
 
 Auf dem Mac/PC: `index.html` öffnen und mit **Testmodus** durchspielen –
 entweder URL mit `?test=1` aufrufen oder im Spiel **7× auf die Uhr tippen**
@@ -102,7 +144,9 @@ gh api repos/{owner}/isiapp/pages -f "source[branch]=main" -f "source[path]=/"
 
 Danach ist die App unter `https://<benutzer>.github.io/isiapp/` erreichbar.
 Die QR-Codes für die Teams erzeugst du unter `…/isiapp/qrcodes.html`,
-`setup.html` erreichst du unter `…/isiapp/setup.html`.
+`setup.html` erreichst du unter `…/isiapp/setup.html`. Den **Handy-Check für
+die Eltern** verschickst du als `…/isiapp/eltern.html` – das ist der einzige
+Link, den Außenstehende vorab bekommen.
 
 > Tipp: Repo erst kurz vor dem Fest veröffentlichen oder die Antworten
 > ändern – die Lösungen stehen ja in `config.js` 😉. Für 10–12-Jährige im
@@ -124,5 +168,5 @@ Die QR-Codes für die Teams erzeugst du unter `…/isiapp/qrcodes.html`,
 
 - Pro Team eine erwachsene Begleitperson oder klare Reviergrenzen vereinbaren.
 - Notfall-Handynummer des Spielleiters auf jedes Handy/Team-Zettel.
-- Spieldauer: 8 Stationen ≈ 4–5 km ≈ 2 Stunden inkl. Rätseln.
+- Spieldauer: 8 Stationen ≈ 4,4–5,0 km Fußweg ≈ 2 Stunden inkl. Rätseln.
 - Bei Regen: Dosen wasserdicht, Handys in Gefrierbeutel 😄

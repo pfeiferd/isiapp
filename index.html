@@ -105,6 +105,7 @@
     <div class="card" id="station-cache-card">
       <h3>💰 Das Versteck</h3>
       <p id="station-cache"></p>
+      <p class="cache-note">Ist die Dose leer, nachdem ihr eure Münze genommen habt? Dann wart ihr das letzte Team – nehmt die Dose mit!</p>
     </div>
     <div class="card solid">
       <h3>🧠 Jakobs Rätsel</h3>
@@ -158,12 +159,15 @@
       <h3>💰 Eure Beute</h3>
       <p>Wie viele Goldmünzen habt ihr unterwegs eingesammelt? (Der Spielleiter zählt mit!)</p>
       <input type="tel" id="coins-input" inputmode="numeric" placeholder="Anzahl Münzen" autocomplete="off">
+      <p>Und wie viele <b>leere Dosen</b> habt ihr mitgebracht?</p>
+      <input type="tel" id="boxes-input" inputmode="numeric" placeholder="Anzahl Dosen" autocomplete="off">
       <button id="btn-finish">🏆 Ergebnis anzeigen</button>
     </div>
     <div class="card solid hidden" id="finish-result-card">
       <h3>📜 Euer Ergebnis</h3>
       <div class="result-line"><span>⏱️ Gebrauchte Zeit</span><b id="res-time"></b></div>
       <div class="result-line"><span>💰 Münz-Gutschrift</span><b id="res-coins"></b></div>
+      <div class="result-line"><span>🥫 Dosen-Gutschrift</span><b id="res-boxes"></b></div>
       <div class="result-line" id="res-offset-line"><span>🛤️ Routen-Ausgleich</span><b id="res-offset"></b></div>
       <div class="result-line"><span>🧠 Gelöste Rätsel</span><b id="res-solved"></b></div>
       <div class="result-line total"><span>🏅 Endzeit</span><b id="res-total"></b></div>
